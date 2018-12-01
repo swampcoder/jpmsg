@@ -7,103 +7,118 @@ import java.util.List;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 
-
 public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements ParticlRpcClient {
 
-	private SMSG smsg = new ParticlSMSG();
-	
-	public ParticlJSONRPCClient(String host, String user, String password, int port) throws MalformedURLException
-	  {
-		  super(new URL("http://" + user + ':' + password + "@" + host + ":" +  Integer.toString(port) + "/"));
-	  }
+   public static void main(String[] args) {
+      try {
+         ParticlJSONRPCClient rpc = new ParticlJSONRPCClient("localhost", "particl", "password", 51735);
+         System.out.println("balance: " + rpc.getBalance());
+         rpc.getSMSG().send("", "", "Msg");
+         rpc.getSMSG().getpubkey("");
+      } catch (MalformedURLException e) {
+         e.printStackTrace();
+      }
+   }
 
-	@Override
-	public SMSG getSMSG() {
+   private SMSG smsg = new ParticlSMSG();
 
-		return smsg;
-	}
-	
-	private class ParticlSMSG implements SMSG
-	{
+   public ParticlJSONRPCClient(String host, String user, String password, int port) throws MalformedURLException {
+      super(new URL("http://" + user + ':' + password + "@" + host + ":" + Integer.toString(port) + "/"));
+   }
 
-		@Override
-		public void viewid(String msgId, SmsgOption... options) throws BitcoinRPCException {
-			
-			query(null);
-		}
+   @Override
+   public SMSG getSMSG() {
 
-		@Override
-		public boolean addaddress(String address, String pubKey) throws BitcoinRPCException {
+      return smsg;
+   }
 
-			return false;
-		}
+   private class ParticlSMSG implements SMSG {
 
-		@Override
-		public void addlocaladdress(String address) throws BitcoinRPCException {
-			
-			
-		}
+      @Override
+      public void viewid(String msgId, SmsgOption... options) throws BitcoinRPCException {
 
-		@Override
-		public void buckets(SmsgStat stat) throws BitcoinRPCException {
-			
-			
-		}
+         Object r = query("smsg", msgId);
+         System.out.println("smsg = " + r);
+      }
 
-		@Override
-		public void disable() throws BitcoinRPCException {
-	
-			query(null);
-			
-		}
+      @Override
+      public boolean addaddress(String address, String pubKey) throws BitcoinRPCException {
 
-		@Override
-		public void enable(String walletName) throws BitcoinRPCException {
-			// TODO Auto-generated method stub
-			
-		}
+         return false;
+      }
 
-		@Override
-		public String getpubkey(String address) throws BitcoinRPCException {
-			// TODO Auto-generated method stub
-			return null;
-		}
+      @Override
+      public void addlocaladdress(String address) throws BitcoinRPCException {
 
-		@Override
-		public List<SmsgMessage> inbox(SmsgMode mode, String filter) throws BitcoinRPCException {
-			// TODO Auto-generated method stub
-			return null;
-		}
+         Object r = query("addlocaladdress", address);
+         System.out.println("smsgaddlocaladdress = " + r);
+      }
 
-		@Override
-		public boolean purge(String msgId) throws BitcoinRPCException {
-			// TODO Auto-generated method stub
-			return false;
-		}
+      @Override
+      public void buckets(SmsgStat stat) throws BitcoinRPCException {
 
-		@Override
-		public void scanbuckets() throws BitcoinRPCException {
-			// TODO Auto-generated method stub
-			
-		}
+      }
 
-		@Override
-		public void scanchains() throws BitcoinRPCException {
-			// TODO Auto-generated method stub
-			
-		}
+      @Override
+      public void disable() throws BitcoinRPCException {
 
-		@Override
-		public String send(String from, String to, String text) throws BitcoinRPCException {
-			// TODO Auto-generated method stub
-			return null;
-		}
+         query(null);
 
-		@Override
-		public String sendanon(String to, String text) throws BitcoinRPCException {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-	}
+      }
+
+      @Override
+      public void enable(String walletName) throws BitcoinRPCException {
+         query("smsgenable", walletName);
+      }
+
+      @Override
+      public String getpubkey(String address) throws BitcoinRPCException {
+         Object r = query("smsggetpubkey", address);
+         System.out.println("getpubkey " + r);
+         return "pubkey";
+      }
+
+      @Override
+      public List<SmsgMessage> inbox(SmsgMode mode, String filter) throws BitcoinRPCException {
+
+         return null;
+      }
+
+      @Override
+      public boolean purge(String msgId) throws BitcoinRPCException {
+         Object r = query("smsgpurge", msgId);
+         System.out.println("smsgpurge = " + r);
+         return false;
+      }
+
+      @Override
+      public void scanbuckets() throws BitcoinRPCException {
+
+         Object r = query("smsgscanbuckets");
+         System.out.println(r);
+      }
+
+      @Override
+      public void scanchains() throws BitcoinRPCException {
+
+         Object r = query("smsgscanchain");
+         System.out.println(r);
+      }
+
+      @Override
+      public String send(String from, String to, String text) throws BitcoinRPCException {
+         Object response = query("smsgsend", from, to, text);
+         System.out.println(response);
+         return "bad";
+      }
+
+      @Override
+      public String sendanon(String to, String text) throws BitcoinRPCException {
+
+         Object response = query("smsgsendanon", to, text);
+         System.out.println("smsgsendanon = " + response);
+         return null;
+      }
+
+   }
 }

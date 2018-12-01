@@ -28,7 +28,10 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
 		Clear;
 	}
 	
-
+	/**
+	 * Interfacing defining particl smsg functionality 
+	 * @author mint
+	 */
 	public static interface SMSG
 	{
 		public void viewid(String msgId, SmsgOption...options) throws BitcoinRPCException;
