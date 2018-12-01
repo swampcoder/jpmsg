@@ -1,5 +1,5 @@
 package org.particl.util;
 
-public class PrivateKey {
+public class JaxbUtil {
 
 }

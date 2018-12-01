@@ -1,7 +1,7 @@
 package org.particl.rpc;
 
-import org.particl.util.PrivateKey;
-import org.particl.util.PubKey;
+import org.particl.crypto.PrivateKey;
+import org.particl.crypto.PubKey;
 
 public class SMSGRPC {
 

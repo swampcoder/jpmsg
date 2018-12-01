@@ -1,4 +1,4 @@
-package org.particl.util;
+package org.particl.crypto;
 
 public class PubKey {
 

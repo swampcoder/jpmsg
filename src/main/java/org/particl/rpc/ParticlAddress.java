@@ -1,6 +1,6 @@
 package org.particl.rpc;
 
-import org.particl.util.PubKey;
+import org.particl.crypto.PubKey;
 
 public class ParticlAddress {
 
