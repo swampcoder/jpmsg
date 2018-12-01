@@ -4,7 +4,7 @@ import org.particl.model.ParticlMsg;
 
 // interface for callbacks from polling threads in application
 public interface IParticlRpcListener {
-	
-	public void notifyParticlMsg(ParticlMsg newMsg);
-	
+
+   public void notifyParticlMsg(ParticlMsg newMsg);
+
 }
