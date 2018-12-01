@@ -1,6 +1,6 @@
 package org.particl.rpc;
 
-import org.particl.crypto.PrivateKey;
+import org.particl.crypto.PrivKey;
 import org.particl.crypto.PubKey;
 
 public class SMSGRPC {
@@ -24,7 +24,7 @@ public class SMSGRPC {
       return null;
    }
 
-   public void importPrivateKey(PrivateKey privateKey) throws ParticlRpcException {
+   public void importPrivateKey(PrivKey privateKey) throws ParticlRpcException {
    }
 
    public void inbox() throws ParticlRpcException {
