@@ -42,7 +42,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          String rcvAddr2 = createReceiveAddress(rpc);
 
          List<SmsgMessageSendResult> results = new ArrayList<SmsgMessageSendResult>();
-         for (int i = 0; i < 5; i++) {
+         for (int i = 0; i < 500; i++) {
             SmsgMessageSendResult result = rpc.getSMSG().send(rcvAddr2, rcvAddr1, "test message " + i);
             results.add(result);
          }
@@ -54,7 +54,6 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          for (SmsgMessageSendResult result : results) {
             SmsgMessage msg = rpc.getSMSG().viewid(result.getMsgId());
             System.out.println(msg);
-
             rpc.getSMSG().purge(msg.getMsgId());
 
          }
@@ -75,6 +74,8 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          System.out.println("private key imported: " + imported);
          imported = rpc.getSMSG().importprivkey("badkeyformat", null);
          System.out.println("private key imported (bad): " + imported);
+
+         rpc.getSMSG().bucketStats();
 
       } catch (MalformedURLException | BitcoinRPCException | SmsgSendFailException e) {
          e.printStackTrace();
@@ -108,6 +109,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
       private ParticlSMSG() {
       }
 
+      @SuppressWarnings("rawtypes")
       @Override
       public SmsgMessage viewid(String msgId, SmsgOption... options) throws BitcoinRPCException {
 
@@ -131,13 +133,13 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          return AddLocalAddressOutput.equals(response.get("result"));
       }
 
+      @SuppressWarnings("rawtypes")
       @Override
       public SmsgBucketStats bucketStats() throws BitcoinRPCException {
 
          LinkedHashMap response = (LinkedHashMap) query("smsgbuckets", "stats");
          System.out.println("response: " + response);
          SmsgBucketStats bucketStats = new SmsgBucketStats();
-         List<SmsgBucket> buckets = new ArrayList<SmsgBucket>();
          Iterator i = response.keySet().iterator();
          while (i.hasNext()) {
             String k = (String) i.next();
@@ -151,25 +153,19 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
                   bucket.setActiveMessages(Integer.parseInt((String) map.get("active messages")));
                   bucket.setHash(Long.parseLong((String) map.get("hash")));
                   bucket.setLastChangeTime((String) map.get("last changed"));
-
                   bucketStats.addBucket(bucket);
-                  // bucket.setBucketSizeKb(bucketSizeKb);
-                  // i = bucket.keySet().iterator();
-                  /*
-                   * while(i.hasNext()) { String k2 = (String) i.next();
-                   * 
-                   * System.out.println("key=" + k2 + "   value=" + map.get(k2) + "   class=" +
-                   * map.get(k2).getClass()); }
-                   */
                }
             } else if (k.equals("total")) {
-
+               // numbuckets=1, numpurged=52, messages=5, size=1.05 KB
+               LinkedHashMap map = (LinkedHashMap) response.get(k);
+               Long numBuckets = (Long) map.get("numbuckets");
+               Long numPurged = (Long) map.get("numpurged");
+               Long messages = (Long) map.get("messages");
+               String size = (String) map.get("size");
+               bucketStats.setNumBuckets(numBuckets.intValue());
+               bucketStats.setNumMessages(messages.intValue());
+               bucketStats.setNumPurged(numPurged.intValue());
             }
-
-            System.out.println("keyv: " + k);
-            System.out.println("keycls: " + k.getClass());
-            ;
-            System.out.println("valuecls: " + response.get(k).getClass());
          }
          return bucketStats;
       }
@@ -244,6 +240,8 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          return messages;
       }
 
+      @SuppressWarnings("rawtypes")
+      @Override
       public List<SmsgMessage> outbox(SmsgOutboxMode mode, String filter) throws BitcoinRPCException {
          LinkedHashMap response = (LinkedHashMap) query("smsgoutbox", mode.name().toLowerCase(), filter);
          System.out.println("smsgoutbox = " + response);
@@ -297,6 +295,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
       @SuppressWarnings("rawtypes")
       private SmsgMessage parseSmsgMsg(LinkedHashMap map) {
          System.out.println(map);
+
          SmsgMessage msg = new SmsgMessage((String) map.get("msgid"));
          int version = Integer.parseInt((String) map.get("version"));
          Long received = (Long) map.get("received");
@@ -307,6 +306,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          boolean msgPaid = (Boolean) "true".equals(map.get("paid"));
          Long expiration = (Long) map.get("expiration");
          String msgText = (String) map.get("text");
+         Long daysRetention = (Long) map.get("daysRetention");
 
          msg.setVersion(version);
          msg.setReceiveTime(received);
@@ -315,19 +315,15 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          msg.setFromAddress(fromAddr);
          msg.setMsgRead(msgRead);
          msg.setExpiryTime(expiration);
+         msg.setMsgText(msgText);
+         msg.setMsgPaid(msgPaid);
+         if (daysRetention != null) {
+            msg.setDaysRetention(daysRetention.intValue());
+         }
          msg.setMsgLocation(LocationMap.get(map.get("location")));
          System.out.println(msg);
 
          return msg;
       }
-
-      /*
-       * @Override public String sendanon(String to, String text) throws
-       * BitcoinRPCException {
-       * 
-       * Object response = query("smsgsendanon", to, text);
-       * System.out.println("smsgsendanon = " + response); return null; }
-       */
-
    }
 }

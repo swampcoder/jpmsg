@@ -19,16 +19,19 @@ public class SmsgMessage {
    private long expiryTime = Long.MAX_VALUE;
    private int msgSize = 0;
    private SmsgLocation msgLocation = null;
+   private boolean msgPaid = false;
 
    public SmsgMessage(String msgId) {
       this.msgId = msgId;
       PartUtil.assertNotNull(msgId);
    }
 
+   @Override
    public int hashCode() {
       return msgId.hashCode();
    }
 
+   @Override
    public boolean equals(Object obj) {
       if (obj instanceof SmsgMessage) {
          SmsgMessage msgCmp = (SmsgMessage) obj;
@@ -40,7 +43,8 @@ public class SmsgMessage {
    @Override
    public String toString() {
       return "SmsgMessage from=" + fromAddress + " to=" + toAddress + " msgId=" + msgId + " version=" + version
-            + "receiveTime=" + receiveTime + " sentTime=" + sentTime + " daysRetention=" + daysRetention + " location=" + msgLocation;
+            + "receiveTime=" + receiveTime + " sentTime=" + sentTime + " daysRetention=" + daysRetention + " location="
+            + msgLocation;
    }
 
    public String getFromAddress() {
@@ -91,6 +95,10 @@ public class SmsgMessage {
       return msgLocation;
    }
 
+   public boolean isMsgPaid() {
+      return msgPaid;
+   }
+
    void setFromAddress(String fromAddress) {
       this.fromAddress = fromAddress;
    }
@@ -133,6 +141,10 @@ public class SmsgMessage {
 
    void setMsgLocation(SmsgLocation msgLocation) {
       this.msgLocation = msgLocation;
+   }
+
+   void setMsgPaid(boolean msgPaid) {
+      this.msgPaid = msgPaid;
    }
 
 }
