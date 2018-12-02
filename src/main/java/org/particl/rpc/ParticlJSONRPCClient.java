@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.particl.rpc.ParticlRpcClient.SmsgOutboxMode;
+
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 
@@ -58,13 +60,15 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
             rpc.getSMSG().purge(msg.getMsgId());
 
          }
-         List<SmsgMessage> inbox = rpc.getSMSG().inbox(SmsgMode.All, null);
+         List<SmsgMessage> inbox = rpc.getSMSG().inbox(SmsgInboxMode.All, null);
          System.out.println(inbox);
          // rpc.getSMSG().scanchain();
          rpc.getSMSG().bucketStats();
          rpc.getSMSG().bucketDump();
          List<SmsgKey> smsgKeys = rpc.getSMSG().smsgKeys();
          System.out.println(smsgKeys);
+         
+         List<SmsgMessage> outbox = rpc.getSMSG().outbox(SmsgOutboxMode.All, null);
       } catch (MalformedURLException | BitcoinRPCException | SmsgSendFailException e) {
          e.printStackTrace();
       }
@@ -212,7 +216,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
 
       @SuppressWarnings("rawtypes")
       @Override
-      public List<SmsgMessage> inbox(SmsgMode mode, String filter) throws BitcoinRPCException {
+      public List<SmsgMessage> inbox(SmsgInboxMode mode, String filter) throws BitcoinRPCException {
          LinkedHashMap response = (LinkedHashMap) query("smsginbox", mode.name().toLowerCase(), filter);
          System.out.println("smsginbox = " + response);
          List<SmsgMessage> messages = new ArrayList<SmsgMessage>();
@@ -222,6 +226,19 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
             messages.add(parseSmsgMsg(map));
          }
          return messages;
+      }
+      
+      public List<SmsgMessage> outbox(SmsgOutboxMode mode, String filter) throws BitcoinRPCException
+      {
+    	  LinkedHashMap response = (LinkedHashMap) query("smsgoutbox", mode.name().toLowerCase(), filter);
+          System.out.println("smsgoutbox = " + response);
+          List<SmsgMessage> messages = new ArrayList<SmsgMessage>();
+          List msgs = (List) response.get("messages");
+          for (Object msg : msgs) {
+             LinkedHashMap map = (LinkedHashMap) msg;
+             messages.add(parseSmsgMsg(map));
+          }
+          return messages;
       }
 
       @Override
@@ -263,11 +280,12 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
       }
 
       @SuppressWarnings("rawtypes")
-      private SmsgMessage parseSmsgMsg(LinkedHashMap map) {
+      private SmsgMessage parseSmsgMsg(LinkedHashMap map ) {
          System.out.println(map);
          SmsgMessage msg = new SmsgMessage((String) map.get("msgid"));
          int version = Integer.parseInt((String) map.get("version"));
-         long receivedTime = (Long) map.get("received");
+         Long received = (Long) map.get("received");
+         Long sent = (Long) map.get("sent");
          String toAddr = (String) map.get("to");
          String fromAddr = (String) map.get("from");
          boolean msgRead = (Boolean) "true".equals(map.get("read"));
@@ -276,7 +294,8 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          String msgText = (String) map.get("text");
 
          msg.setVersion(version);
-         msg.setReceiveTime(receivedTime);
+         msg.setReceiveTime(received);
+         msg.setSentTime(sent);
          msg.setToAddress(toAddr);
          msg.setFromAddress(fromAddr);
          msg.setMsgRead(msgRead);

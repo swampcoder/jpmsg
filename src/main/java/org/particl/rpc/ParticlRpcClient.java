@@ -14,8 +14,13 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
       Delete, SetRead, AsciiEncoding, HexEncoding;
    }
 
-   static enum SmsgMode {
+   static enum SmsgInboxMode {
       All, Unread, Clear;
+   }
+   
+   static enum SmsgOutboxMode
+   {
+	   All, Clear;
    }
    
    static enum SmsgLocation
@@ -48,7 +53,9 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
       
       public List<SmsgKey> smsgKeys() throws BitcoinRPCException;
 
-      public List<SmsgMessage> inbox(SmsgMode mode, String filter) throws BitcoinRPCException;
+      public List<SmsgMessage> inbox(SmsgInboxMode mode, String filter) throws BitcoinRPCException;
+      
+      public List<SmsgMessage> outbox(SmsgOutboxMode mode, String filter) throws BitcoinRPCException;
 
       public boolean purge(String msgId) throws BitcoinRPCException;
 
