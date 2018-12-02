@@ -45,6 +45,8 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
       public boolean enable(String walletName) throws BitcoinRPCException;
 
       public String getpubkey(String address) throws BitcoinRPCException;
+      
+      public List<SmsgKey> smsgKeys() throws BitcoinRPCException;
 
       public List<SmsgMessage> inbox(SmsgMode mode, String filter) throws BitcoinRPCException;
 

@@ -63,6 +63,8 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          // rpc.getSMSG().scanchain();
          rpc.getSMSG().bucketStats();
          rpc.getSMSG().bucketDump();
+         List<SmsgKey> smsgKeys = rpc.getSMSG().smsgKeys();
+         System.out.println(smsgKeys);
       } catch (MalformedURLException | BitcoinRPCException | SmsgSendFailException e) {
          e.printStackTrace();
       }
@@ -94,7 +96,6 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
 
       private ParticlSMSG() {
       }
-
       @Override
       public SmsgMessage viewid(String msgId, SmsgOption... options) throws BitcoinRPCException {
 
@@ -188,6 +189,25 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
       public String getpubkey(String address) throws BitcoinRPCException {
          LinkedHashMap response = (LinkedHashMap) query("smsggetpubkey", address);
          return (String) response.get("publickey");
+      }
+      
+      @SuppressWarnings("rawtypes")
+      @Override
+      public List<SmsgKey> smsgKeys() throws BitcoinRPCException 
+      {
+    	  LinkedHashMap response = (LinkedHashMap) query("smsglocalkeys");
+    	  List<SmsgKey> keys = new ArrayList<SmsgKey>();
+    	  List keyList = (List) response.get("smsg_keys");
+    	  for(Object o : keyList)
+    	  {
+    		  LinkedHashMap map = (LinkedHashMap) o;
+    		  SmsgKey smsgKey = new SmsgKey();
+    		  smsgKey.setAddress((String) map.get("address"));
+    		  smsgKey.setPublicKey((String) map.get("public_key"));
+    		  smsgKey.setLabel((String) map.get("label"));
+    		  keys.add(smsgKey);
+    	  }
+    	  return keys;
       }
 
       @SuppressWarnings("rawtypes")
