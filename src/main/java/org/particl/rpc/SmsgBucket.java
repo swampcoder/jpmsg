@@ -2,21 +2,40 @@ package org.particl.rpc;
 
 public class SmsgBucket {
 
-   private Long bucketId = null;
+   private final long bucketId;
    private Long time = null;
    private Integer numMessages = null;
    private Integer activeMessages = null;
-   private Integer hash = null;
+   private Long hash = null;
    private String lastChangeTime = null;
    private Double bucketSizeKb = null;
    
-   public SmsgBucket() {}
+   public SmsgBucket(long bucketId) {
+      this.bucketId = bucketId;
+   }
    
    @Override
    public String toString() 
    {
       return "SmsgBucket id=" + bucketId + " time=" + time + " # messages=" + numMessages + " active messages=" + activeMessages +
             " hash=" + hash + " lastChangeTime=" + lastChangeTime + " bucketSizeKb=" + bucketSizeKb;
+   }
+   
+   @Override
+   public int hashCode() 
+   {
+      return Long.hashCode(bucketId);
+   }
+   
+   @Override
+   public boolean equals(Object cmp)
+   {
+      if(cmp instanceof SmsgBucket)
+      {
+         SmsgBucket bucket = (SmsgBucket) cmp;
+         return bucket.getBucketId() == getBucketId();
+      }
+      return false;
    }
 
    public Long getBucketId() {
@@ -35,7 +54,7 @@ public class SmsgBucket {
       return activeMessages;
    }
 
-   public Integer getHash() {
+   public Long getHash() {
       return hash;
    }
 
@@ -45,10 +64,6 @@ public class SmsgBucket {
 
    public Double getBucketSizeKb() {
       return bucketSizeKb;
-   }
-
-   void setBucketId(Long bucketId) {
-      this.bucketId = bucketId;
    }
 
    void setTime(Long time) {
@@ -63,7 +78,7 @@ public class SmsgBucket {
       this.activeMessages = activeMessages;
    }
 
-   void setHash(Integer hash) {
+   void setHash(Long hash) {
       this.hash = hash;
    }
 

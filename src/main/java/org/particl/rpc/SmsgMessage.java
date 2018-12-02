@@ -15,7 +15,6 @@ public class SmsgMessage {
    private Long sentTime = null;
    private int daysRetention = 0;
 
-   // fields part of smsg view command
    private boolean msgRead = false;
    private long expiryTime = Long.MAX_VALUE;
    private int msgSize = 0;
@@ -41,7 +40,7 @@ public class SmsgMessage {
    @Override
    public String toString() {
       return "SmsgMessage from=" + fromAddress + " to=" + toAddress + " msgId=" + msgId + " version=" + version
-            + "receiveTime=" + receiveTime + " sentTime=" + sentTime + " daysRetention=" + daysRetention;
+            + "receiveTime=" + receiveTime + " sentTime=" + sentTime + " daysRetention=" + daysRetention + " location=" + msgLocation;
    }
 
    public String getFromAddress() {

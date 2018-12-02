@@ -14,10 +14,6 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
       Delete, SetRead, AsciiEncoding, HexEncoding;
    }
 
-   static enum SmsgStat {
-      Stats, Dump;
-   }
-
    static enum SmsgMode {
       All, Unread, Clear;
    }
@@ -40,7 +36,9 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
 
       public boolean addlocaladdress(String address) throws BitcoinRPCException;
 
-      public boolean buckets(SmsgStat stat) throws BitcoinRPCException;
+      public SmsgBucketStats bucketStats( ) throws BitcoinRPCException;
+      
+      public boolean bucketDump () throws BitcoinRPCException;
 
       public boolean disable() throws BitcoinRPCException;
 
