@@ -3,8 +3,10 @@ package org.particl.rpc;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
@@ -20,6 +22,14 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
    private final static String ScanChainOutput = "Scan Chain Completed.";
    private final static String SendFailOuptut = "Send failed.";
    
+   private final static Map<String, SmsgLocation> LocationMap = new HashMap<String, SmsgLocation>();
+   static
+   {
+	   LocationMap.put("inbox", SmsgLocation.Inbox);
+	   LocationMap.put("outbox",  SmsgLocation.Outbox);
+	   LocationMap.put("sending", SmsgLocation.Sending);
+   }
+   
    public static void main(String[] args) {
       try {
          ParticlJSONRPCClient rpc = new ParticlJSONRPCClient("localhost", "particl", "password", 51735);
@@ -31,14 +41,21 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          String rcvAddr1 = createReceiveAddress(rpc);
          String rcvAddr2 = createReceiveAddress(rpc);
          
-         for(int i = 0; i < 100; i++) 
+         List<SmsgMessageSendResult> results = new ArrayList<SmsgMessageSendResult>();
+         for(int i = 0; i < 10; i++) 
          {
-        	
-            rpc.getSMSG().send(rcvAddr2, rcvAddr1, "test message " + i);
+        	 SmsgMessageSendResult result = rpc.getSMSG().send(rcvAddr2, rcvAddr1, "test message " + i);
+        	 results.add(result);
          }
          //rpc.getSMSG().buckets(SmsgStat.Dump);
          rpc.getSMSG().buckets(SmsgStat.Stats);
          rpc.getSMSG().scanbuckets();
+         
+         for(SmsgMessageSendResult result : results)
+         {
+        	 SmsgMessage msg = rpc.getSMSG().viewid(result.getMsgId());
+        	 System.out.println(msg);
+         }
          //rpc.getSMSG().scanchain();
          
       } catch (MalformedURLException | BitcoinRPCException | SmsgSendFailException e) {
@@ -75,16 +92,28 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
 	  
       @Override
       public SmsgMessage viewid(String msgId, SmsgOption... options) throws BitcoinRPCException {
-
-         Object response = query("smsg", msgId);
-         System.out.println("smsg = " + response);
+    	  
+    	 LinkedHashMap response = (LinkedHashMap) query("smsg", msgId);
+    	 
          SmsgMessage msg = new SmsgMessage(msgId);
+         int version = Integer.parseInt((String) response.get("version"));
+         long receivedTime = (Long) response.get("received");
+         String toAddr = (String) response.get("to");
+         String fromAddr = (String) response.get("from");
+         boolean msgRead = (Boolean) "true".equals(response.get("read"));
+         boolean msgPaid = (Boolean) "true".equals(response.get("paid"));
+         Long expiration = (Long) response.get("expiration");
+         String msgText = (String) response.get("text");
          
-         // parse/set
-         
+         msg.setVersion(version);
+         msg.setReceiveTime(receivedTime);
+         msg.setToAddress(toAddr);
+         msg.setFromAddress(fromAddr);
+         msg.setMsgRead(msgRead);
+         msg.setExpiryTime(expiration);
+         msg.setMsgLocation(LocationMap.get(response.get("location")));
          System.out.println(msg);
          return msg;
-
       }
 
       @SuppressWarnings("rawtypes")
@@ -176,6 +205,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
     		 throw new SmsgSendFailException((String) response.get("error"));
     	 }
     	 String msgId = (String) response.get("msgid");
+    	 System.out.println(response);
     	 return new SmsgMessageSendResult(msgId);
       }
 

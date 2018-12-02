@@ -1,5 +1,6 @@
 package org.particl.rpc;
 
+import org.particl.rpc.ParticlRpcClient.SmsgLocation;
 import org.particl.util.PartUtil;
 
 public class SmsgMessage {
@@ -9,16 +10,16 @@ public class SmsgMessage {
    private String msgText = null;
 
    private final String msgId;
-   private String version = null;
+   private Integer version = null;
    private Long receiveTime = null;
    private Long sentTime = null;
    private int daysRetention = 0;
-   
+
    // fields part of smsg view command
    private boolean msgRead = false;
    private long expiryTime = Long.MAX_VALUE;
    private int msgSize = 0;
-   
+   private SmsgLocation msgLocation = null;
 
    public SmsgMessage(String msgId) {
       this.msgId = msgId;
@@ -59,7 +60,7 @@ public class SmsgMessage {
       return msgId;
    }
 
-   public String getVersion() {
+   public Integer getVersion() {
       return version;
    }
 
@@ -87,6 +88,10 @@ public class SmsgMessage {
       return msgSize;
    }
 
+   public SmsgLocation getMsgLocation() {
+      return msgLocation;
+   }
+
    void setFromAddress(String fromAddress) {
       this.fromAddress = fromAddress;
    }
@@ -99,7 +104,7 @@ public class SmsgMessage {
       this.msgText = msgText;
    }
 
-   void setVersion(String version) {
+   void setVersion(Integer version) {
       this.version = version;
    }
 
@@ -126,7 +131,9 @@ public class SmsgMessage {
    void setMsgSize(int msgSize) {
       this.msgSize = msgSize;
    }
-   
-   
+
+   void setMsgLocation(SmsgLocation msgLocation) {
+      this.msgLocation = msgLocation;
+   }
 
 }
