@@ -9,8 +9,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.particl.rpc.ParticlRpcClient.SmsgOutboxMode;
-
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 
@@ -60,15 +58,24 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
             rpc.getSMSG().purge(msg.getMsgId());
 
          }
-         List<SmsgMessage> inbox = rpc.getSMSG().inbox(SmsgInboxMode.All, null);
+         List<SmsgMessage> inbox = rpc.getSMSG().inbox(SmsgInboxMode.All, "message 4");
          System.out.println(inbox);
          // rpc.getSMSG().scanchain();
          rpc.getSMSG().bucketStats();
          rpc.getSMSG().bucketDump();
          List<SmsgKey> smsgKeys = rpc.getSMSG().smsgKeys();
          System.out.println(smsgKeys);
-         
+
          List<SmsgMessage> outbox = rpc.getSMSG().outbox(SmsgOutboxMode.All, null);
+
+         System.out.println("Outbox size: " + outbox.size());
+
+         String privKey = rpc.dumpPrivKey(rcvAddr2);
+         boolean imported = rpc.getSMSG().importprivkey(privKey, null);
+         System.out.println("private key imported: " + imported);
+         imported = rpc.getSMSG().importprivkey("badkeyformat", null);
+         System.out.println("private key imported (bad): " + imported);
+
       } catch (MalformedURLException | BitcoinRPCException | SmsgSendFailException e) {
          e.printStackTrace();
       }
@@ -100,6 +107,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
 
       private ParticlSMSG() {
       }
+
       @Override
       public SmsgMessage viewid(String msgId, SmsgOption... options) throws BitcoinRPCException {
 
@@ -194,24 +202,32 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          LinkedHashMap response = (LinkedHashMap) query("smsggetpubkey", address);
          return (String) response.get("publickey");
       }
-      
+
+      @Override
+      public boolean importprivkey(String privKey, String label) throws BitcoinRPCException {
+         try {
+            query("smsgimportprivkey", privKey, label);
+            return true;
+         } catch (Exception e) {
+            return false;
+         }
+      }
+
       @SuppressWarnings("rawtypes")
       @Override
-      public List<SmsgKey> smsgKeys() throws BitcoinRPCException 
-      {
-    	  LinkedHashMap response = (LinkedHashMap) query("smsglocalkeys");
-    	  List<SmsgKey> keys = new ArrayList<SmsgKey>();
-    	  List keyList = (List) response.get("smsg_keys");
-    	  for(Object o : keyList)
-    	  {
-    		  LinkedHashMap map = (LinkedHashMap) o;
-    		  SmsgKey smsgKey = new SmsgKey();
-    		  smsgKey.setAddress((String) map.get("address"));
-    		  smsgKey.setPublicKey((String) map.get("public_key"));
-    		  smsgKey.setLabel((String) map.get("label"));
-    		  keys.add(smsgKey);
-    	  }
-    	  return keys;
+      public List<SmsgKey> smsgKeys() throws BitcoinRPCException {
+         LinkedHashMap response = (LinkedHashMap) query("smsglocalkeys");
+         List<SmsgKey> keys = new ArrayList<SmsgKey>();
+         List keyList = (List) response.get("smsg_keys");
+         for (Object o : keyList) {
+            LinkedHashMap map = (LinkedHashMap) o;
+            SmsgKey smsgKey = new SmsgKey();
+            smsgKey.setAddress((String) map.get("address"));
+            smsgKey.setPublicKey((String) map.get("public_key"));
+            smsgKey.setLabel((String) map.get("label"));
+            keys.add(smsgKey);
+         }
+         return keys;
       }
 
       @SuppressWarnings("rawtypes")
@@ -227,18 +243,17 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          }
          return messages;
       }
-      
-      public List<SmsgMessage> outbox(SmsgOutboxMode mode, String filter) throws BitcoinRPCException
-      {
-    	  LinkedHashMap response = (LinkedHashMap) query("smsgoutbox", mode.name().toLowerCase(), filter);
-          System.out.println("smsgoutbox = " + response);
-          List<SmsgMessage> messages = new ArrayList<SmsgMessage>();
-          List msgs = (List) response.get("messages");
-          for (Object msg : msgs) {
-             LinkedHashMap map = (LinkedHashMap) msg;
-             messages.add(parseSmsgMsg(map));
-          }
-          return messages;
+
+      public List<SmsgMessage> outbox(SmsgOutboxMode mode, String filter) throws BitcoinRPCException {
+         LinkedHashMap response = (LinkedHashMap) query("smsgoutbox", mode.name().toLowerCase(), filter);
+         System.out.println("smsgoutbox = " + response);
+         List<SmsgMessage> messages = new ArrayList<SmsgMessage>();
+         List msgs = (List) response.get("messages");
+         for (Object msg : msgs) {
+            LinkedHashMap map = (LinkedHashMap) msg;
+            messages.add(parseSmsgMsg(map));
+         }
+         return messages;
       }
 
       @Override
@@ -280,7 +295,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
       }
 
       @SuppressWarnings("rawtypes")
-      private SmsgMessage parseSmsgMsg(LinkedHashMap map ) {
+      private SmsgMessage parseSmsgMsg(LinkedHashMap map) {
          System.out.println(map);
          SmsgMessage msg = new SmsgMessage((String) map.get("msgid"));
          int version = Integer.parseInt((String) map.get("version"));
