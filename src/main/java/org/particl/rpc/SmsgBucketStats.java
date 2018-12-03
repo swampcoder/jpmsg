@@ -39,6 +39,7 @@ public class SmsgBucketStats {
    public String toString() {
       StringBuilder debug = new StringBuilder();
       debug.append("SMSG Bucket Statistics\n");
+      debug.append("numBuckets=" + numBuckets + " numPurged=" + numPurged + " numMessages=" + numMessages + " totalSizeKb=" + totalSizeKb + "\n");
       for (SmsgBucket bucket : buckets) {
          debug.append(bucket + "\n");
       }

@@ -27,6 +27,11 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
    {
 	   Inbox, Outbox, Sending;
    }
+   
+   public static interface MARKET 
+   {
+      // TODO 
+   }
 
    /**
     * Interfacing defining particl smsg functionality

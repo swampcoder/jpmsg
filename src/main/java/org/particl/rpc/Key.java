@@ -1,6 +1,6 @@
 package org.particl.rpc;
 
-public class Key {
+abstract public class Key {
 
    private String address= null;
    private String publicKey= null;
@@ -8,9 +8,9 @@ public class Key {
    private Boolean anon = null;
    private String label = "";
    
-   public Key() 
+   protected Key() 
    {
-      
+      super();
    }
    
    @Override
