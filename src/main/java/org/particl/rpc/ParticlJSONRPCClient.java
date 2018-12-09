@@ -35,6 +35,9 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          ParticlJSONRPCClient rpc = new ParticlJSONRPCClient("localhost", "particl", "password", 51735);
          System.out.println("balance: " + rpc.getBalance());
 
+         rpc.getSMSG().enable("wallet.dat");
+         rpc.getSMSG().enable("dkd");
+         rpc.getSMSG().disable();
          rpc.getSMSG().disable();
          rpc.getSMSG().enable("wallet.dat");
 
@@ -93,6 +96,8 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
    }
 
    private SMSG smsg = new ParticlSMSG();
+   
+   //private MARKET market = new ParticlMARKET();
 
    public ParticlJSONRPCClient(String host, String user, String password, int port) throws MalformedURLException {
       super(new URL("http://" + user + ':' + password + "@" + host + ":" + Integer.toString(port) + "/"));
@@ -103,7 +108,15 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
 
       return smsg;
    }
+   
 
+   @Override
+   public MARKET getMARKET() {
+
+      return null;
+   }
+   
+   
    private class ParticlSMSG implements SMSG {
 
       private ParticlSMSG() {
@@ -181,15 +194,30 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
       @Override
       public boolean disable() throws BitcoinRPCException {
 
-         LinkedHashMap response = (LinkedHashMap) query("smsgdisable");
-         return DisabledOutput.equals(response.get("result"));
+         try
+         {
+            LinkedHashMap response = (LinkedHashMap) query("smsgdisable");
+            return DisabledOutput.equals(response.get("result"));
+         }
+         catch(BitcoinRPCException rpcException)
+         {
+            System.out.println(rpcException);
+         }
+         return false;
       }
 
       @SuppressWarnings("rawtypes")
       @Override
       public boolean enable(String walletName) throws BitcoinRPCException {
-         LinkedHashMap response = (LinkedHashMap) query("smsgenable", walletName);
-         return EnabledOutput.equals(response.get("result"));
+         try
+         {
+            LinkedHashMap response = (LinkedHashMap) query("smsgenable", walletName);
+            return EnabledOutput.equals(response.get("result"));
+         } catch(BitcoinRPCException rpcException)
+         {
+            System.out.println(rpcException);
+         }
+         return false;
       }
 
       @SuppressWarnings("rawtypes")
@@ -326,4 +354,5 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements Partic
          return msg;
       }
    }
+
 }
