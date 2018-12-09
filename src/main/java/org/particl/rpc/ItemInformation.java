@@ -13,5 +13,5 @@ public class ItemInformation {
    private Long createdAt = null;
    private ItemCategory itemCategory = null;
    private ItemLocation itemLocation = null;
-   private ItemImages itemImages = null;
+   private ItemImage itemImages = null;
 }

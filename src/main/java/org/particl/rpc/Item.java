@@ -17,8 +17,16 @@ public class Item {
    private Long expiredAt = null;
    private Long updatedAt = null;
    private Long createdAt = null;
-   private List<ActionMessage> actionMessages = new ArrayList<ActionMessage>();
+   private List<Bid> bids = new ArrayList<Bid>();
+   private List<MessagingInformation> messagingInformation = new ArrayList<MessagingInformation>();
+   private List<ListingItemObject> listingItemObjects = new ArrayList<ListingItemObject>();
    private PaymentInformation paymentInfo = null;
+   private Escrow escrow = null;
+   private ItemInformation itemInformation = null;
+   private ItemLocation itemLocation = null;
+   private List<ItemImage> itemImages = new ArrayList<ItemImage>();
+   private Market market = null;
+   private List<ActionMessage> actionMessages = new ArrayList<ActionMessage>();
    
    public Item() 
    {
