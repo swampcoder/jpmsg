@@ -20,4 +20,10 @@ public class Item {
    private List<ActionMessage> actionMessages = new ArrayList<ActionMessage>();
    private PaymentInformation paymentInfo = null;
    
+   public Item() 
+   {
+      super();
+   }
+   
+   
 }

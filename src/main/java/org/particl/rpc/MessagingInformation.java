@@ -1,16 +1,16 @@
 package org.particl.rpc;
 
-public class PaymentInformation {
+public class MessagingInformation {
 
    private Integer id = null;
-   private PaymentType type = null;
+   private DSNProtocol protocol = null;
+   private String publicKey = null;
    private Integer listingItemId = null;
    private Integer listingItemTemplateId = null;
    private Long updatedAt = null;
    private Long createdAt = null;
-   private Escrow escrow = null;
    
-   public PaymentInformation() 
+   public MessagingInformation() 
    {
       super();
    }
@@ -19,8 +19,12 @@ public class PaymentInformation {
       return id;
    }
 
-   public PaymentType getType() {
-      return type;
+   public DSNProtocol getProtocol() {
+      return protocol;
+   }
+
+   public String getPublicKey() {
+      return publicKey;
    }
 
    public Integer getListingItemId() {
@@ -39,16 +43,16 @@ public class PaymentInformation {
       return createdAt;
    }
 
-   public Escrow getEscrow() {
-      return escrow;
-   }
-
    void setId(Integer id) {
       this.id = id;
    }
 
-   void setType(PaymentType type) {
-      this.type = type;
+   void setProtocol(DSNProtocol protocol) {
+      this.protocol = protocol;
+   }
+
+   void setPublicKey(String publicKey) {
+      this.publicKey = publicKey;
    }
 
    void setListingItemId(Integer listingItemId) {
@@ -65,10 +69,6 @@ public class PaymentInformation {
 
    void setCreatedAt(Long createdAt) {
       this.createdAt = createdAt;
-   }
-
-   void setEscrow(Escrow escrow) {
-      this.escrow = escrow;
    }
    
    
