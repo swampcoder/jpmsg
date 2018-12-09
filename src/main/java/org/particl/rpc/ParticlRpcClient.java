@@ -3,7 +3,28 @@ package org.particl.rpc;
 import java.util.List;
 import java.util.Map;
 
-import org.particl.rpc.SmsgSendFailException;
+import org.particl.rpc.market.CurrencyPrice;
+import org.particl.rpc.market.DSNProtocol;
+import org.particl.rpc.market.EscrowType;
+import org.particl.rpc.market.ItemCategory;
+import org.particl.rpc.market.ItemInformation;
+import org.particl.rpc.market.ItemType;
+import org.particl.rpc.market.ModifyType;
+import org.particl.rpc.market.OrderItem;
+import org.particl.rpc.market.OrderStatus;
+import org.particl.rpc.market.Ordering;
+import org.particl.rpc.market.PriceTicker;
+import org.particl.rpc.market.Profile;
+import org.particl.rpc.market.ProfileAddress;
+import org.particl.rpc.market.ProfileFavorite;
+import org.particl.rpc.market.ShippingAvailability;
+import org.particl.rpc.market.ShoppingCart;
+import org.particl.rpc.smsg.SmsgBucketStats;
+import org.particl.rpc.smsg.SmsgKey;
+import org.particl.rpc.smsg.SmsgMessage;
+import org.particl.rpc.smsg.SmsgMessageSendResult;
+import org.particl.rpc.smsg.SmsgSendFailException;
+
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 
@@ -13,20 +34,20 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
    
    public MARKET getMARKET();
 
-   static enum SmsgOption {
+   public static enum SmsgOption {
       Delete, SetRead, AsciiEncoding, HexEncoding;
    }
 
-   static enum SmsgInboxMode {
+   public static enum SmsgInboxMode {
       All, Unread, Clear;
    }
    
-   static enum SmsgOutboxMode
+   public static enum SmsgOutboxMode
    {
 	   All, Clear;
    }
    
-   static enum SmsgLocation
+   public static enum SmsgLocation
    {
 	   Inbox, Outbox, Sending;
    }
