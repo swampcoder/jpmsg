@@ -75,7 +75,7 @@ public interface ParticlRpcClient extends BitcoindRpcClient {
 
    }
    
-   // Particl Market interface - TODO break out into sub interfaces per functionality for easier implementions 
+   // Particl Market interface 
    public static interface MARKET 
    {
 
