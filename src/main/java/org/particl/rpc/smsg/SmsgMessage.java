@@ -1,7 +1,7 @@
 package org.particl.rpc.smsg;
 
-import org.particl.rpc.ParticlRpcClient;
-import org.particl.rpc.ParticlRpcClient.SmsgLocation;
+import org.particl.rpc.core.IParticlCore;
+import org.particl.rpc.core.IParticlCore.SmsgLocation;
 import org.particl.util.PartUtil;
 
 public class SmsgMessage {

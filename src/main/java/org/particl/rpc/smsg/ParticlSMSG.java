@@ -7,12 +7,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.particl.rpc.ParticlJSONRPCClient;
-import org.particl.rpc.ParticlRpcClient.SMSG;
-import org.particl.rpc.ParticlRpcClient.SmsgInboxMode;
-import org.particl.rpc.ParticlRpcClient.SmsgLocation;
-import org.particl.rpc.ParticlRpcClient.SmsgOption;
-import org.particl.rpc.ParticlRpcClient.SmsgOutboxMode;
+import org.particl.rpc.core.ParticlJSONRPCClient;
+import org.particl.rpc.core.IParticlCore.SMSG;
+import org.particl.rpc.core.IParticlCore.SmsgInboxMode;
+import org.particl.rpc.core.IParticlCore.SmsgLocation;
+import org.particl.rpc.core.IParticlCore.SmsgOption;
+import org.particl.rpc.core.IParticlCore.SmsgOutboxMode;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 
