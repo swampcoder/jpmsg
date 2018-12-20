@@ -20,14 +20,13 @@ import com.rabbitmq.client.ConnectionFactory;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 
-public class ParticlSmsgNode {
+public class ParticlSmsgNode extends SmsgNode {
 
    private static final ExecutorService QueueThreads = Executors.newFixedThreadPool(2);
    
    private final UserProfileCache userCache = new UserProfileCache();
    
-   private ParticlJSONRPCClient particlRPC = null;
-   private ParticlRequestMonitorThread smsgInboxMonitor = null;
+   private SmsgNodeMonitorThread smsgInboxMonitor = null;
    private ChannelRequestQueue requestQueue = null;
    private ChannelResponseQueue responseQueue = null;
    
@@ -35,37 +34,34 @@ public class ParticlSmsgNode {
    
    public ParticlSmsgNode( ) throws MalformedURLException 
    {
-      super();
-      particlRPC = new ParticlJSONRPCClient("localhost", "particl", "password", 22222);
+      super(new ParticlJSONRPCClient("localhost", "particl", "password", 22222));
    }
    
    String[] start(String rabbitMQuri) throws KeyManagementException, NoSuchAlgorithmException, URISyntaxException 
    {
       //particlRPC.getSMSG().enable("wallet.dat");
-      String newReceiveAddress = particlRPC.getNewAddress();
-      String pubkey = particlRPC.getSMSG().getpubkey(newReceiveAddress);
-      boolean result = particlRPC.getSMSG().addaddress(newReceiveAddress, pubkey);
-      result = result && particlRPC.getSMSG().addlocaladdress(newReceiveAddress);
-
-      System.out.println("Generated address=" + newReceiveAddress);
-      System.out.println("Generated pubkey=" + pubkey);
-      System.out.println("Initialized wallet=" + result);
-      address = newReceiveAddress;
-      if(!result) return null;
+      String[] addr_pk = createAddress();
+      if(addr_pk == null) return null;
+      
+      System.out.println("Generated address=" + addr_pk[0]);
+      System.out.println("Generated pubkey=" +addr_pk[1]);
+     
+      address = addr_pk[0]; 
       
       ConnectionFactory mqfactory = new ConnectionFactory();
       mqfactory.setHost("localhost");
       //mqfactory.setUri(rabbitMqUri);
 
-      responseQueue = new ChannelResponseQueue(particlRPC.getSMSG(), address);
+      responseQueue = new ChannelResponseQueue(particl.getSMSG(), address);
       requestQueue = new ChannelRequestQueue(mqfactory, responseQueue, userCache);
       
       QueueThreads.execute(responseQueue);
       QueueThreads.execute(requestQueue);
 
-      smsgInboxMonitor = new ParticlRequestMonitorThread(particlRPC.getSMSG(), requestQueue);
+      smsgInboxMonitor = new SmsgNodeMonitorThread(
+            particl.getSMSG(), requestQueue, null);
       
-      return new String[] { address, pubkey} ;
+      return addr_pk;
    }
    
    public static void main(String[] args) 
@@ -85,7 +81,7 @@ public class ParticlSmsgNode {
          {
             System.out.println("PARTICL SMSG NODE INITIALIZED WITH PUBKEY " + addr_pk[1]);
             
-            runTester(addr_pk[0], node.particlRPC.getSMSG());
+            //runTester(addr_pk[0], node.particlRPC.getSMSG());
          }
       } catch (MalformedURLException | KeyManagementException | NoSuchAlgorithmException | URISyntaxException e) {
          e.printStackTrace();

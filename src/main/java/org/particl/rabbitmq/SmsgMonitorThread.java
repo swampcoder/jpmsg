@@ -6,32 +6,29 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.commons.codec.binary.Base64;
 import org.particl.rpc.core.IParticlCore.SMSG;
 import org.particl.rpc.core.IParticlCore.SmsgInboxMode;
 import org.particl.rpc.core.smsg.SmsgMessage;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 // TODO make more generic for monitoring of inbox,outbot,sent
-public class ParticlRequestMonitorThread extends TimerTask {
+abstract public class SmsgMonitorThread extends TimerTask {
 
-   private final ChannelRequestQueue requestQueue;
-   
-   private Timer monitorTimer = new Timer("Particl SMSG Inbox Monitor");
+   private Timer monitorTimer = new Timer("Particl SMSG Monitor=" + getClass().getSimpleName());
    
    private final SMSG smsg;
 
    private Set<String> activeMsgs = new HashSet<String>();
    private Set<String> expiredMsgs = new HashSet<String>();
    
-   public ParticlRequestMonitorThread(SMSG smsg, ChannelRequestQueue requestQueue) 
+   private final List<IParticlUserNodeListener> listeners;
+   
+   abstract protected boolean processMsg(SmsgMessage smsg);
+   
+   public SmsgMonitorThread(SMSG smsg, List<IParticlUserNodeListener> listeners) 
    {
       super();
-      this.requestQueue =requestQueue;
       this.smsg = smsg;
-      
+      this.listeners = listeners;
       monitorTimer.schedule(this, 1000L, 5000L);
    }
    
@@ -50,12 +47,13 @@ public class ParticlRequestMonitorThread extends TimerTask {
         if(activeMsgs.add(msg.getMsgId())) 
         {
            // process this msg for requests
-           if(!checkForRequests(msg)) 
+           if(!processMsg(msg)) 
            {
               expiredMsgs.add(msg.getMsgId());
            }
         }
      }
+
 
      synchronized (this) 
      {
@@ -63,8 +61,14 @@ public class ParticlRequestMonitorThread extends TimerTask {
         for(String expiredId : expiredMsgs) 
         {
            // delete
-           smsg.purge(expiredId);
-           System.out.println("Purging id: " + expiredId);
+           
+           // check for now since only using 1 particl instance
+           
+           if(getClass() != SmsgUserNodeMonitorThread.class)
+           {
+              smsg.purge(expiredId);
+              System.out.println("Purging id: " + expiredId);
+           }
         }
         
         activeMsgs.removeAll(expiredMsgs);
@@ -73,27 +77,21 @@ public class ParticlRequestMonitorThread extends TimerTask {
       
    }
    
-   private boolean checkForRequests(SmsgMessage msg) 
+   
+   protected void notifyMsg(NodeMsgType msgType, Object msgObj)
    {
-      try
+      if(listeners != null) 
       {
-         String decodedMsg = new String(Base64.decodeBase64(msg.getMsgText()));
-         System.out.println("Received request: " + msg.getMsgText());
-         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-         ChannelCreateRequest request = gson.fromJson(decodedMsg, ChannelCreateRequest.class);
-         
-         // learn more about validating TODO 
-         if(request != null && request.getRequestAddress() != null)
+         for(IParticlUserNodeListener l : listeners) 
          {
-            requestQueue.handleRequest(request);
-            System.out.println("Processed request: " + request);   
-            return true;
+            l.notifyUserNodeMsg(msgType, msgObj);
          }
-         
-      } catch(Exception e ) 
-      {
-         // ignore - parse error (add validation)
       }
-      return false;
+   }
+
+
+   protected SMSG getSMSG() 
+   {
+      return smsg;
    }
 }

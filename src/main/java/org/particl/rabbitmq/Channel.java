@@ -37,7 +37,7 @@ public class Channel {
 
    void addUser(UserProfile user) 
    {
-      
+   
    }
    
 }
