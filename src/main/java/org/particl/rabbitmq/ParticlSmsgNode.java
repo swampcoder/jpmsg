@@ -24,6 +24,8 @@ public class ParticlSmsgNode {
 
    private static final ExecutorService QueueThreads = Executors.newFixedThreadPool(2);
    
+   private final UserProfileCache userCache = new UserProfileCache();
+   
    private ParticlJSONRPCClient particlRPC = null;
    private ParticlRequestMonitorThread smsgInboxMonitor = null;
    private ChannelRequestQueue requestQueue = null;
@@ -37,7 +39,7 @@ public class ParticlSmsgNode {
       particlRPC = new ParticlJSONRPCClient("localhost", "particl", "password", 22222);
    }
    
-   String[] start(String rabbitMqUri) throws KeyManagementException, NoSuchAlgorithmException, URISyntaxException 
+   String[] start(String rabbitMQuri) throws KeyManagementException, NoSuchAlgorithmException, URISyntaxException 
    {
       //particlRPC.getSMSG().enable("wallet.dat");
       String newReceiveAddress = particlRPC.getNewAddress();
@@ -56,7 +58,7 @@ public class ParticlSmsgNode {
       //mqfactory.setUri(rabbitMqUri);
 
       responseQueue = new ChannelResponseQueue(particlRPC.getSMSG(), address);
-      requestQueue = new ChannelRequestQueue(mqfactory, responseQueue);
+      requestQueue = new ChannelRequestQueue(mqfactory, responseQueue, userCache);
       
       QueueThreads.execute(responseQueue);
       QueueThreads.execute(requestQueue);

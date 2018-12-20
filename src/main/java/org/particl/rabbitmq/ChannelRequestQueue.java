@@ -12,16 +12,18 @@ import com.rabbitmq.client.ConnectionFactory;
 
 public class ChannelRequestQueue implements Runnable {
 
+   private final UserProfileCache userCache;
    private ConnectionFactory mqFactory = null;
    private final BlockingQueue<ChannelCreateRequest> requests = new ArrayBlockingQueue<ChannelCreateRequest>(10);
    private final ChannelResponseQueue responseQueue;
    
    private Connection mqConnection = null;
    
-   public ChannelRequestQueue(ConnectionFactory mqFactory, ChannelResponseQueue responseQueue) 
+   public ChannelRequestQueue(ConnectionFactory mqFactory, ChannelResponseQueue responseQueue, UserProfileCache userCache) 
    {
       this.mqFactory = mqFactory;
       this.responseQueue = responseQueue;
+      this.userCache = userCache;
    }
    
    public void handleRequest(ChannelCreateRequest request)
@@ -72,10 +74,13 @@ public class ChannelRequestQueue implements Runnable {
                channel = mqConnection.createChannel();
                channel.exchangeDeclare(exchangeName, "direct", true);
                String queueName = channel.queueDeclare().getQueue();
-               String routingKey = "todo";
+               String routingKey = UUID.randomUUID().toString();
                channel.queueBind(queueName, exchangeName, routingKey);
                
-               response.setResponseData("localhost", 5672, queueName);
+               UserProfile user = new UserProfile(request.getRequestAddress());
+               userCache.storeUser(user);
+               
+               response.setResponseData("localhost", 5672, queueName, routingKey, user.getPubKeySecret());
                
                // notify channel details
                responseQueue.sendResponse(response);
@@ -92,7 +97,6 @@ public class ChannelRequestQueue implements Runnable {
                   try {
                      channel.close();
                   } catch (IOException | TimeoutException e) {
-                     // TODO Auto-generated catch block
                      e.printStackTrace();
                   }
                }

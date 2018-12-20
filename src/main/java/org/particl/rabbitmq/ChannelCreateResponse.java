@@ -8,6 +8,8 @@ public class ChannelCreateResponse {
    private Integer port = null;
    
    private String queueName = null;
+   private String routingKey = null;
+   private String pubKeySecret = null;
    
    public ChannelCreateResponse( ChannelCreateRequest request ) 
    {
@@ -31,11 +33,23 @@ public class ChannelCreateResponse {
    public String getQueueName() {
       return queueName;
    }
+   
+   public String getRoutingKey() 
+   {
+      return routingKey;
+   }
+   
+   public String getPubkeySecret() 
+   {
+      return pubKeySecret;
+   }
 
-   public void setResponseData(String hostname, int port, String queueName)
+   void setResponseData(String hostname, int port, String queueName, String routingKey, String pubKeySecret)
    {
       this.hostname = hostname;
       this.port = port;
       this.queueName = queueName;
+      this.routingKey = routingKey;
+      this.pubKeySecret = pubKeySecret;
    }
 }

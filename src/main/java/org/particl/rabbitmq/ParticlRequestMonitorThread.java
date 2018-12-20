@@ -50,7 +50,10 @@ public class ParticlRequestMonitorThread extends TimerTask {
         if(activeMsgs.add(msg.getMsgId())) 
         {
            // process this msg for requests
-           checkForRequests(msg);
+           if(!checkForRequests(msg)) 
+           {
+              expiredMsgs.add(msg.getMsgId());
+           }
         }
      }
 
@@ -59,7 +62,9 @@ public class ParticlRequestMonitorThread extends TimerTask {
 
         for(String expiredId : expiredMsgs) 
         {
-           // delete 
+           // delete
+           smsg.purge(expiredId);
+           System.out.println("Purging id: " + expiredId);
         }
         
         activeMsgs.removeAll(expiredMsgs);
@@ -68,7 +73,7 @@ public class ParticlRequestMonitorThread extends TimerTask {
       
    }
    
-   private void checkForRequests(SmsgMessage msg) 
+   private boolean checkForRequests(SmsgMessage msg) 
    {
       try
       {
@@ -82,10 +87,13 @@ public class ParticlRequestMonitorThread extends TimerTask {
          {
             requestQueue.handleRequest(request);
             System.out.println("Processed request: " + request);   
+            return true;
          }
+         
       } catch(Exception e ) 
       {
          // ignore - parse error (add validation)
       }
+      return false;
    }
 }
