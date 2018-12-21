@@ -16,12 +16,12 @@ public class ParticlSmsgUserNode extends SmsgNode {
 
    private final List<IParticlUserNodeListener> listeners = 
          new CopyOnWriteArrayList<IParticlUserNodeListener>();
-   private SmsgUserNodeMonitorThread userNodeMonitor = null;
+   private SmsgUserNodeProtocolMonitor userNodeMonitor = null;
    
    public ParticlSmsgUserNode(ParticlJSONRPCClient particl) 
    {
       super(particl);
-      this.userNodeMonitor = new SmsgUserNodeMonitorThread(particl.getSMSG(), listeners);
+      this.userNodeMonitor = new SmsgUserNodeProtocolMonitor(particl.getSMSG(), listeners);
    }
    
    public ParticlJSONRPCClient getCoreRpc() 

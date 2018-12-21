@@ -8,27 +8,19 @@ import org.particl.rpc.core.smsg.SmsgMessage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class SmsgUserNodeMonitorThread extends SmsgMonitorThread {
+public class SmsgUserNodeProtocolMonitor extends SmsgProtocolMonitor {
 
    private static interface UserNodeHandler 
    {
       public void handleSmsg(SmsgMessage msg);
    }
 
-   public SmsgUserNodeMonitorThread(SMSG smsg, List<IParticlUserNodeListener> listeners) {
+   public SmsgUserNodeProtocolMonitor(SMSG smsg, List<IParticlUserNodeListener> listeners) {
       super(smsg, listeners);
    }
-   
-   
+
    @Override
-   public void run() 
-   {
-      super.run();
-      //getSMSG().scanbuckets();
-   }
-   
-   @Override
-   protected boolean processMsg(SmsgMessage smsg) {
+   protected boolean processProtcolMsg(SmsgMessage smsg) {
 
       SmsgMessageData smsgData = new SmsgMessageData(smsg);
       if(smsgData.isNodeMsg()) 

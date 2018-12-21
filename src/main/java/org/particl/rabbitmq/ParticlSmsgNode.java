@@ -26,7 +26,7 @@ public class ParticlSmsgNode extends SmsgNode {
    
    private final UserProfileCache userCache = new UserProfileCache();
    
-   private SmsgNodeMonitorThread smsgInboxMonitor = null;
+   private SmsgNodeProtocolMonitor smsgInboxMonitor = null;
    private ChannelRequestQueue requestQueue = null;
    private ChannelResponseQueue responseQueue = null;
    
@@ -58,7 +58,7 @@ public class ParticlSmsgNode extends SmsgNode {
       QueueThreads.execute(responseQueue);
       QueueThreads.execute(requestQueue);
 
-      smsgInboxMonitor = new SmsgNodeMonitorThread(
+      smsgInboxMonitor = new SmsgNodeProtocolMonitor(
             particl.getSMSG(), requestQueue, null);
       
       return addr_pk;

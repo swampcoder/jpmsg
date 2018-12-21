@@ -15,18 +15,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 // TODO make more generic for monitoring of inbox,outbot,sent
-public class SmsgNodeMonitorThread extends SmsgMonitorThread {
+public class SmsgNodeProtocolMonitor extends SmsgProtocolMonitor {
 
    private final ChannelRequestQueue requestQueue;
   
-   public SmsgNodeMonitorThread(SMSG smsg, ChannelRequestQueue requestQueue, List<IParticlUserNodeListener> listeners) 
+   public SmsgNodeProtocolMonitor(SMSG smsg, ChannelRequestQueue requestQueue, List<IParticlUserNodeListener> listeners) 
    {
       super(smsg, listeners);
       this.requestQueue =requestQueue;
    }
    
    @Override
-   protected boolean processMsg(SmsgMessage smsg) {
+   protected boolean processProtcolMsg(SmsgMessage smsg) {
 
       SmsgMessageData smsgData = new SmsgMessageData(smsg);
       if(smsgData.isNodeMsg()) 
@@ -41,13 +41,21 @@ public class SmsgNodeMonitorThread extends SmsgMonitorThread {
       NodeMsgType msgType = NodeMsgType.lookup(msgId);
       if(msgType == null) return false;
       
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
       if(msgType == NodeMsgType.CHANNEL_CREATE_REQUEST) 
       {
-         Gson gson = new GsonBuilder().setPrettyPrinting().create();
          ChannelCreateRequest request = (ChannelCreateRequest) gson.fromJson(json, ChannelCreateRequest.class);
          notifyMsg(msgType, request);
          requestQueue.handleRequest(request);
          return true;
+      }
+      else if(msgType == NodeMsgType.KEYSTORE_INIT_MESSAGE) 
+      {
+         ChannelTLSInitMessage tls = (ChannelTLSInitMessage) gson.fromJson(json, ChannelTLSInitMessage.class);
+         notifyMsg(msgType, tls);
+
+         return true;
+         
       }
       
       return false;

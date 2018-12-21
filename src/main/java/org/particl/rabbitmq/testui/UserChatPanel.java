@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 
 import org.particl.rabbitmq.ChannelCreateRequest;
 import org.particl.rabbitmq.IParticlUserNodeListener;
@@ -196,19 +197,37 @@ public class UserChatPanel extends JPanel implements ActionListener, IParticlUse
    @Override
    public void notifyOutbox(List<SmsgMessage> outbox) {
      
-      
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() 
+         {
+            
+         }
+      });
    }
 
    @Override
    public void notifyLocalKeys(List<SmsgKey> keys) {
       
-      
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() 
+         {
+            
+         }
+      });
    }
 
    @Override
    public void notifyInbox(List<SmsgMessage> inbox) {
      
-      
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() 
+         {
+            
+         }
+      });
    }
 
 }
