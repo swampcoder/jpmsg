@@ -14,6 +14,13 @@ public class ItemLocation {
    {
       super();
    }
+   
+   @Override
+   public String toString()
+   {
+      return getClass().getSimpleName() + "  id=" + id + " region=" + getRegion() + "  addr=" + getAddress() + " itemInfoId=" + getItemInformationId() + " updatedAt=" + 
+            this.getUpdatedAt() + "  createdAt=" + getCreatedAt() + "  marker=" + getLocationMarker();
+   }
 
    public Integer getId() {
       return id;

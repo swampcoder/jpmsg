@@ -16,6 +16,11 @@ public class ParentItemCategory {
       super();
    }
 
+   public boolean isRoot() 
+   {
+      return parentItemCategoryId == null;
+   }
+
    public Integer getId() {
       return id;
    }

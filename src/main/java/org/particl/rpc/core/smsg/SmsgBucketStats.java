@@ -1,4 +1,4 @@
-package org.particl.rpc.smsg;
+package org.particl.rpc.core.smsg;
 
 import java.util.ArrayList;
 import java.util.List;

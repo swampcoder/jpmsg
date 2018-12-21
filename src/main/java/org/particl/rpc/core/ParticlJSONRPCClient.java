@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.particl.rpc.smsg.ParticlSMSG;
-import org.particl.rpc.smsg.SmsgBucket;
-import org.particl.rpc.smsg.SmsgBucketStats;
-import org.particl.rpc.smsg.SmsgKey;
-import org.particl.rpc.smsg.SmsgMessage;
-import org.particl.rpc.smsg.SmsgMessageSendResult;
-import org.particl.rpc.smsg.SmsgSendFailException;
+import org.particl.rpc.core.smsg.ParticlSMSG;
+import org.particl.rpc.core.smsg.SmsgBucket;
+import org.particl.rpc.core.smsg.SmsgBucketStats;
+import org.particl.rpc.core.smsg.SmsgKey;
+import org.particl.rpc.core.smsg.SmsgMessage;
+import org.particl.rpc.core.smsg.SmsgMessageSendResult;
+import org.particl.rpc.core.smsg.SmsgSendFailException;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
 
@@ -26,20 +26,21 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements IParti
    public static void main(String[] args) {
 
       try {
-         ParticlJSONRPCClient rpc = new ParticlJSONRPCClient("localhost", "test", "test", 3000);
+
+         ParticlJSONRPCClient rpc = new ParticlJSONRPCClient("localhost", "particl", "password", 22223);
          System.out.println("balance: " + rpc.getBalance());
 
-         rpc.getSMSG().enable("wallet.dat");
-         rpc.getSMSG().enable("dkd");
-         rpc.getSMSG().disable();
-         rpc.getSMSG().disable();
-         rpc.getSMSG().enable("wallet.dat");
+         //rpc.getSMSG().enable("wallet.dat");
+        // rpc.getSMSG().enable("dkd");
+        // rpc.getSMSG().disable();
+        // rpc.getSMSG().disable();
+       //  rpc.getSMSG().enable("wallet.dat");
 
          String rcvAddr1 = createReceiveAddress(rpc);
          String rcvAddr2 = createReceiveAddress(rpc);
 
          List<SmsgMessageSendResult> results = new ArrayList<SmsgMessageSendResult>();
-         for (int i = 0; i < 500; i++) {
+         for (int i = 0; i < 50; i++) {
             SmsgMessageSendResult result = rpc.getSMSG().send(rcvAddr2, rcvAddr1, "test message " + i);
             results.add(result);
          }
@@ -73,6 +74,11 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements IParti
          System.out.println("private key imported (bad): " + imported);
 
          rpc.getSMSG().bucketStats();
+         
+         
+         
+         
+ 
       } catch (Exception e) {
          e.printStackTrace();
       }
@@ -94,7 +100,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements IParti
    // private MARKET market = new ParticlMARKET();
 
    public ParticlJSONRPCClient(String host, String user, String password, int port) throws MalformedURLException {
-      super(new URL("http://" + user + ':' + password + "@" + host + ":" + Integer.toString(port) + "/api/rpc"));
+      super(new URL("http://" + user + ':' + password + "@" + host + ":" + Integer.toString(port)));
    }
 
    @Override

@@ -7,7 +7,9 @@ public enum NodeMsgType {
 
    
    CHANNEL_CREATE_REQUEST("0001"), 
-   CHANNEL_CREATE_RESPONSE("0002");
+   CHANNEL_CREATE_RESPONSE("0002"),
+   
+   KEYSTORE_INIT_MESSAGE("0003");
    
    private final static Map<String, NodeMsgType> idMapping = new HashMap<String, NodeMsgType>();
    static 

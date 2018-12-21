@@ -15,6 +15,12 @@ public class LocationMarker {
    {
       super();
    }
+   
+   @Override
+   public String toString() 
+   {
+      return "LocMarker title=" + getMarkerTitle() + "  text=" + getMarkerText() + "  lat=" + lat + "  lon=" + lng + " itemLocId=" + itemLocationId;
+   }
 
    public Integer getId() {
       return id;

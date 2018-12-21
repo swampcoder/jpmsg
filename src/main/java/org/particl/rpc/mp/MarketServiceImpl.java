@@ -32,6 +32,7 @@ public class MarketServiceImpl implements IMarketService {
    public List<Market> list() {
 
       JSONRPC2Request request = new JSONRPC2Request("market", Arrays.asList("list"), 1);
+      System.out.println("r1: " + request);
       JSONRPC2Response response;
       try {
          response = session.send(request);
@@ -42,12 +43,22 @@ public class MarketServiceImpl implements IMarketService {
          e.printStackTrace();
          return null;
       }
-
    }
 
    @Override
-   public void add(MarketAddRequest request) {
+   public void add(String name, String privateKey, String address) throws MarketException {
 
+      Utils.notNull(name, privateKey, address);
+      JSONRPC2Request jsonRequest = new JSONRPC2Request("market", Arrays.asList("add", name, privateKey, address), 5);
+      System.out.println("request: " + jsonRequest);
+      JSONRPC2Response response;
+      try {
+         response = session.send(jsonRequest);
+         System.out.println(response);
+      } catch (JSONRPC2SessionException e) {
+         
+         throw new MarketException(MarketResult.BadRequest, "Error adding market name= + name", e);
+      }
    }
 
 }

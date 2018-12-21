@@ -13,6 +13,12 @@ public class ShippingDestination {
    {
       super();
    }
+   
+   @Override
+   public String toString() 
+   {
+      return "ShippingDestination id=" + id + " country=" + country + " availabiltiy=" + this.shippingAvailability + " itemInfoId=" + itemInformationId;
+   }
 
    public Integer getId() {
       return id;

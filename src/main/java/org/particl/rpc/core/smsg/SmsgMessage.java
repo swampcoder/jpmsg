@@ -1,10 +1,32 @@
-package org.particl.rpc.smsg;
+package org.particl.rpc.core.smsg;
 
-import org.particl.rpc.core.IParticlCore;
+import java.util.Comparator;
+
 import org.particl.rpc.core.IParticlCore.SmsgLocation;
 import org.particl.util.PartUtil;
 
 public class SmsgMessage {
+   
+   public final static Comparator<SmsgMessage> ReceiveTimeSorter = new Comparator<SmsgMessage>() {
+      @Override
+      public int compare(SmsgMessage a, SmsgMessage b) {
+         return Long.compare(a.receiveTime, b.receiveTime);
+      }
+   };
+   
+   public final static Comparator<SmsgMessage> SendTimeSorter = new Comparator<SmsgMessage>() {
+      @Override
+      public int compare(SmsgMessage a, SmsgMessage b) {
+         return Long.compare(a.sentTime, b.sentTime);
+      }
+   };
+   
+   public final static Comparator<SmsgMessage> SizeSorter = new Comparator<SmsgMessage>() {
+      @Override
+      public int compare(SmsgMessage a, SmsgMessage b) {
+         return Integer.compare(a.msgSize, b.msgSize);
+      }
+   };
 
    private String fromAddress = null;
    private String toAddress = null;

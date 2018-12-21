@@ -3,6 +3,11 @@ package org.particl.rpc.core;
 import java.util.List;
 import java.util.Map;
 
+import org.particl.rpc.core.smsg.SmsgBucketStats;
+import org.particl.rpc.core.smsg.SmsgKey;
+import org.particl.rpc.core.smsg.SmsgMessage;
+import org.particl.rpc.core.smsg.SmsgMessageSendResult;
+import org.particl.rpc.core.smsg.SmsgSendFailException;
 import org.particl.rpc.mp.dto.Bid;
 import org.particl.rpc.mp.dto.CurrencyPrice;
 import org.particl.rpc.mp.dto.DSNProtocol;
@@ -24,17 +29,13 @@ import org.particl.rpc.mp.dto.ProfileFavorite;
 import org.particl.rpc.mp.dto.ShippingAvailability;
 import org.particl.rpc.mp.dto.ShippingDestination;
 import org.particl.rpc.mp.dto.ShoppingCart;
-import org.particl.rpc.smsg.SmsgBucketStats;
-import org.particl.rpc.smsg.SmsgKey;
-import org.particl.rpc.smsg.SmsgMessage;
-import org.particl.rpc.smsg.SmsgMessageSendResult;
-import org.particl.rpc.smsg.SmsgSendFailException;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 import wf.bitcoin.javabitcoindrpcclient.BitcoindRpcClient;
 
 public interface IParticlCore extends BitcoindRpcClient {
 
+   
    public SMSG getSMSG();
    
    public static enum SmsgOption {

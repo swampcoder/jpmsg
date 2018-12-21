@@ -9,17 +9,16 @@ import org.particl.rpc.core.ParticlJSONRPCClient;
 
 public class MultiUserGridPanel extends JPanel {
 
-   public MultiUserGridPanel(ParticlSmsgUserNode particl) 
+   public MultiUserGridPanel(ParticlSmsgUserNode... particl) 
    {
-      setLayout(new GridLayout(2,2));
-      
-      for(int i = 0 ; i < 4; i++) 
+      setLayout(new GridLayout(1,2));
+      for(ParticlSmsgUserNode node : particl) 
       {
-         String[] addr_pk = particl.createAddress();
+         String[] addr_pk = node.createAddress();
          System.out.println("Created address " + addr_pk[0]);
-         UserChatPanel userPanel = new UserChatPanel(particl, addr_pk[0]);
+         UserChatPanel userPanel = new UserChatPanel(node, addr_pk[0]);
          add(userPanel);
-      
       }
+      
    }
 }

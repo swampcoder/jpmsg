@@ -2,14 +2,17 @@ package org.particl.rpc.mp.dto;
 
 public class PaymentInformation {
 
+   private Integer listingItemTemplateId = null;
+   private Long createdAt = null;
+   private Escrow Escrow = null;
+   private ItemPrice ItemPrice = null;
    private Integer id = null;
    private PaymentType type = null;
    private Integer listingItemId = null;
-   private Integer listingItemTemplateId = null;
-   private Long updatedAt = null;
-   private Long createdAt = null;
-   private Escrow escrow = null;
    
+   private Long updatedAt = null;
+   
+
    public PaymentInformation() 
    {
       super();
@@ -19,7 +22,7 @@ public class PaymentInformation {
    public String toString() 
    {
       return "PaymentInfo id=" + id + " type=" + type + " listingItemId=" + listingItemId + 
-            " listingItemTemplateId=" + listingItemTemplateId + " updatedAt=" + updatedAt + " createdAt=" + "escrow=" + escrow;
+            " listingItemTemplateId=" + listingItemTemplateId + " updatedAt=" + updatedAt + " createdAt=" + createdAt + "escrow=" + Escrow;
    }
 
    public Integer getId() {
@@ -47,7 +50,7 @@ public class PaymentInformation {
    }
 
    public Escrow getEscrow() {
-      return escrow;
+      return Escrow;
    }
 
    void setId(Integer id) {
@@ -75,7 +78,7 @@ public class PaymentInformation {
    }
 
    void setEscrow(Escrow escrow) {
-      this.escrow = escrow;
+      this.Escrow = escrow;
    }
    
    

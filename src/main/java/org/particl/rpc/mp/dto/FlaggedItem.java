@@ -15,6 +15,12 @@ public class FlaggedItem {
    {
       super();
    }
+   
+   @Override
+   public String toString() 
+   {
+      return getClass().getSimpleName() + "  id=" + id + "  listingItemId=" + listingItemId + "  proposalId=" + proposalId + " reason=" + reason;
+   }
 
    public Integer getId() {
       return id;

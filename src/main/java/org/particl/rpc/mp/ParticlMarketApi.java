@@ -35,6 +35,7 @@ public class ParticlMarketApi implements IParticlMarket {
    private JSONRPC2Session jsonSession;
    
    private IMarketService marketService;
+   private IItemService itemService;
    
    private static class BasicAuthenticator implements ConnectionConfigurator {
       private final URL serverUrl;
@@ -49,7 +50,7 @@ public class ParticlMarketApi implements IParticlMarket {
       }
   }
    
-   public ParticlMarketApi(String host, int port, String user, String password) throws MalformedURLException 
+   public ParticlMarketApi(String host, int port, String user, String password, String walletName) throws MalformedURLException 
    {
       super();
       serverUrl = new URL("http://" + user + ':' + password + "@" + host + ":" + Integer.toString(port) + "/api/rpc");
@@ -59,6 +60,7 @@ public class ParticlMarketApi implements IParticlMarket {
       
       // instantiate services 
       marketService = new MarketServiceImpl(jsonSession);
+      itemService = new ItemServiceImpl(jsonSession);
    }
    
    @Override
@@ -111,8 +113,8 @@ public class ParticlMarketApi implements IParticlMarket {
 
    @Override
    public IItemService getItemService() {
-      // TODO Auto-generated method stub
-      return null;
+
+      return itemService;
    }
 
    @Override

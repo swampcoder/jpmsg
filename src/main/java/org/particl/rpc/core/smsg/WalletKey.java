@@ -1,4 +1,4 @@
-package org.particl.rpc.smsg;
+package org.particl.rpc.core.smsg;
 
 public class WalletKey extends Key {
 

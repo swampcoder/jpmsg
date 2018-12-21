@@ -1,5 +1,8 @@
 package org.particl.rpc.mp.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemCategory {
 
    private Integer id = null;
@@ -14,6 +17,22 @@ public class ItemCategory {
    public ItemCategory() 
    {
       super();
+   }
+   
+   public List<String> getCategoryTree() 
+   {
+      List<String> catTree = new ArrayList<String>();
+      catTree.add(name);
+      ParentItemCategory parentCat = this.parentItemCategory;
+      while(parentCat != null) 
+      {
+         if(parentCat.getName() != null) 
+         {
+            catTree.add(0, parentCat.getName());
+         }
+         parentCat = this.parentItemCategory.getParentItemCategory();
+      }
+      return catTree;
    }
 
    public Integer getId() {

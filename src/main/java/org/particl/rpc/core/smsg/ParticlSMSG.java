@@ -1,4 +1,4 @@
-package org.particl.rpc.smsg;
+package org.particl.rpc.core.smsg;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -176,7 +176,7 @@ public class ParticlSMSG implements SMSG {
       @Override
       public List<SmsgMessage> inbox(SmsgInboxMode mode, String filter) throws BitcoinRPCException {
          LinkedHashMap response = (LinkedHashMap) client.query("smsginbox", mode.name().toLowerCase(), filter);
-         System.out.println("smsginbox = " + response);
+         //System.out.println("smsginbox = " + response);
          List<SmsgMessage> messages = new ArrayList<SmsgMessage>();
          List msgs = (List) response.get("messages");
          for (Object msg : msgs) {

@@ -1,5 +1,6 @@
 package org.particl.rabbitmq;
 
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,8 @@ class UserProfile implements Delayed {
    
    // The String required for the server to send a public key message to the requestor 
    private String pubkeySecret = null;
+   private X509Certificate tls_certificate = null;
+   
    
    private final Map<String, Connection> mqRoutes = new HashMap<String, Connection>();
    

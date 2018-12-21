@@ -4,8 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -14,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
@@ -21,16 +26,31 @@ import org.particl.rabbitmq.ChannelCreateRequest;
 import org.particl.rabbitmq.IParticlUserNodeListener;
 import org.particl.rabbitmq.NodeMsgType;
 import org.particl.rabbitmq.ParticlSmsgUserNode;
-import org.particl.rpc.core.ParticlJSONRPCClient;
+import org.particl.rpc.core.smsg.SmsgKey;
+import org.particl.rpc.core.smsg.SmsgMessage;
+import org.particl.rpc.core.smsg.SmsgPoller;
 
 // Panel for a single user 
 // used for testing locally
-public class UserChatPanel extends JPanel implements ActionListener, IParticlUserNodeListener {
+public class UserChatPanel extends JPanel implements ActionListener, IParticlUserNodeListener,
+   SmsgPoller.ISmsgInboxHandler, SmsgPoller.ISmsgKeyHandler, SmsgPoller.ISmsgOutboxHandler{
 
    private final String address;
    
-   private final StringList knownUsers = new StringList();
-   private final StringList knownGroups = new StringList();
+   private SmsgPoller smsgPoller = null;
+   private final JTabbedPane listTabs = new JTabbedPane();
+   private final SimpleList<SmsgKey> localkeyList = new SimpleList<SmsgKey>()
+   {
+      @Override
+      protected void handleDoubleClick(SmsgKey k) {
+         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+         clipboard.setContents(new StringSelection(k.getPublicKey() + " " + k.getAddress()), null);
+      }
+
+   };
+   private final SimpleList<String> fromList = new SimpleList<String>();
+   private final SimpleList<String> knownUsers = new SimpleList<String>();
+   private final SimpleList<String> knownGroups = new SimpleList<String>();
    
    private final ParticlSmsgUserNode particl;
    
@@ -63,6 +83,16 @@ public class UserChatPanel extends JPanel implements ActionListener, IParticlUse
       setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(4, 10, 10, 10), BorderFactory.createTitledBorder(address)));
       
       particl.addListener(this);
+
+      smsgPoller = new SmsgPoller(particl.getCoreRpc().getSMSG(), false);
+      
+      smsgPoller.addInboxHandler(this);
+      smsgPoller.addOutboxHandler(this);
+      smsgPoller.addLocalKeyHandler(this);
+      
+      smsgPoller.scheduleInbox(5000L, null);
+      smsgPoller.scheduleLocalKeys(5000L);
+      smsgPoller.scheduleOutbox(5000L, null);
    }
    
    private void initControlPane()
@@ -83,11 +113,19 @@ public class UserChatPanel extends JPanel implements ActionListener, IParticlUse
    
    private void initLists() 
    {
+      JPanel keyPane = new JPanel();
+      keyPane.setPreferredSize(new Dimension(250,500));
+      keyPane.setLayout(new BorderLayout());
+      keyPane.add(new JScrollPane(localkeyList));
+      listTabs.add("local", keyPane);
+      
       JPanel listPane = new JPanel();
+      listPane.setPreferredSize(new Dimension(250,500));
       listPane.setLayout(new GridLayout(2,1));
       listPane.add(new JScrollPane(knownUsers));
       listPane.add(new JScrollPane(knownGroups));
-      add(listPane, BorderLayout.WEST);
+      listTabs.addTab("lists", listPane);
+      add(listTabs, BorderLayout.WEST);
    }
    
    private void initTextArea() 
@@ -133,11 +171,10 @@ public class UserChatPanel extends JPanel implements ActionListener, IParticlUse
          }
          else if(e.getSource() == addPubKey)
          {
-            String pk = JOptionPane.showInputDialog("Enter PK");
-            if(pk != null) 
-            {
-               
-            }
+            String pkaddr = JOptionPane.showInputDialog("Enter PK + Address");
+            String[] values = pkaddr.split(" ");
+            boolean result = particl.getCoreRpc().getSMSG().addaddress(values[1], values[0]);
+            System.out.println("Result add: " + result);
          }
          else if(e.getSource() == queryGroups) 
          {
@@ -154,6 +191,24 @@ public class UserChatPanel extends JPanel implements ActionListener, IParticlUse
       {
          ex.printStackTrace();
       }
+   }
+
+   @Override
+   public void notifyOutbox(List<SmsgMessage> outbox) {
+     
+      
+   }
+
+   @Override
+   public void notifyLocalKeys(List<SmsgKey> keys) {
+      
+      
+   }
+
+   @Override
+   public void notifyInbox(List<SmsgMessage> inbox) {
+     
+      
    }
 
 }

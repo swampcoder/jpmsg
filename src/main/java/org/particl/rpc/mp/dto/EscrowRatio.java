@@ -13,6 +13,12 @@ public class EscrowRatio {
    {
       super();
    }
+   
+   @Override
+   public String toString() 
+   {
+      return "EscrowRatio id=" + id + " buyer=" + buyer + "  seller=" + seller + "  escrowId=" + escrowId;
+   }
 
    public Integer getId() {
       return id;

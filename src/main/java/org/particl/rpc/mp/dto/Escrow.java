@@ -13,6 +13,12 @@ public class Escrow {
    {
       super();
    }
+   
+   @Override
+   public String toString()
+   {
+      return "Escrow id=" + id + " type=" + type + " paymentInfoId=" + paymentInformationId + " " + escrowRatio + "  updatedAt=" + updatedAt + "  createdAt=" + createdAt;
+   }
 
    public Integer getId() {
       return id;

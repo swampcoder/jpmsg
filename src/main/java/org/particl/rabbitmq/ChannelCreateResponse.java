@@ -9,6 +9,7 @@ public class ChannelCreateResponse {
    
    private String queueName = null;
    private String routingKey = null;
+   private String encryptionKey = null;
    private String pubKeySecret = null;
    
    public ChannelCreateResponse( ChannelCreateRequest request ) 
