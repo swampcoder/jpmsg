@@ -1,5 +1,6 @@
 package org.particl.ui.smsg;
 
+import java.awt.Component;
 import java.util.List;
 
 import javax.swing.table.TableCellRenderer;
@@ -9,7 +10,7 @@ import org.particl.rpc.core.smsg.SmsgLocation;
 import org.particl.rpc.core.smsg.SmsgMessage;
 import org.particl.rpc.core.smsg.SmsgPoller;
 import org.particl.ui.table.DataTable;
-import org.particl.ui.table.DataTableEntry;
+import org.particl.ui.table.*;
 
 public class SmsgMessageTable extends DataTable<SmsgMessage>
       implements SmsgPoller.ISmsgInboxHandler, SmsgPoller.ISmsgOutboxHandler {
@@ -59,8 +60,9 @@ public class SmsgMessageTable extends DataTable<SmsgMessage>
    }
 
    @Override
-   protected void universalDecorate(DataTableEntry<SmsgMessage> entry, boolean selected) {
+   public void universalDecorate(DataTableEntry<SmsgMessage> entry, Component component, boolean selected) {
 
+      
    }
 
    protected class ReadColumn {

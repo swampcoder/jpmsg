@@ -51,9 +51,16 @@ public class SmsgViewPanel extends JPanel {
       smsgTabs.addTab("Outbox", new JScrollPane(outboxTable));
       smsgTabs.addTab("Buckets", new JScrollPane(bucketTable));
       smsgTabs.addTab("Keys", new JScrollPane(localKeyTable));
+      //this.setLayout(new GridLayout(1,1));
+     // add(smsgTabs);
       
-      this.setLayout(new GridLayout(1,1));
-      add(smsgTabs);
+      setLayout(new GridLayout(2,2));
+      add(new JScrollPane(inboxTable));
+      add(new JScrollPane(outboxTable));
+      add( new JScrollPane(bucketTable));
+      add(new JScrollPane(localKeyTable));
+      
+      
 
    }
 }

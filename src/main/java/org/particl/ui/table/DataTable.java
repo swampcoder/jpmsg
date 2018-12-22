@@ -4,20 +4,16 @@ import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 abstract public class DataTable<T> extends JTable {
 
+   private final DataTable<T> table = this;
    private List<DataTableColumn<T>> columns = new ArrayList<DataTableColumn<T>>();
    private DataTableModel<T> model = null;
    private TableRowSorter<DataTableModel<T>> sorter = null;
@@ -84,69 +80,14 @@ abstract public class DataTable<T> extends JTable {
       return columnAdjuster;
    }
 
-   abstract protected static class DataTableColumn<T> {
+   protected void universalDecorate(DataTableEntry<T> entry, Component component, boolean selected) {
 
-      private String title = null;
-      private final Set<String> attributes = new HashSet<String>();
-
-      abstract protected Object extractCellData(T t);
-
-      abstract protected Comparator<?> getComparator();
-
-      abstract protected void setCellData(T t, Object cellObj);
-
-      protected DataTableColumn(String title) {
-         super();
-         this.title = title;
-      }
-
-      public String getTitle() {
-         return title;
-      }
-      
-      public boolean isEditable() 
-      {
-         return false;
-      }
-      
-      public TableCellEditor getEditor() { return null; }
-
-      @SuppressWarnings("serial")
-      public TableCellRenderer getRenderer() {
-         return new DefaultTableCellRenderer()
-         {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, 
-                  boolean hasFocus, int row, int column) 
-            {
-               @SuppressWarnings("unchecked")
-               DataTableEntry<T> entry = (DataTableEntry<T>) value;
-               JLabel label = (JLabel) super.getTableCellRendererComponent(table, entry.getCell(), 
-                     selected, hasFocus, row, column);
-               return label;
-            }
-         };
-      }
-
-      protected void setAttribute(String attribute) {
-         attributes.add(attribute);
-      }
-
-      public boolean hasAttribute(String attribute) {
-         return attributes.contains(attribute);
-      }
-
-      protected void decorate(DataTableEntry<T> entry, boolean abSelected) { }
    }
 
    // Override where required
-   protected void universalDecorate(DataTableEntry<T> entry, boolean selected) {
-
-   }
-
    abstract protected class StringColumn extends DataTableColumn<T> {
       protected StringColumn(String title) {
-         super(title);
+         super(table, title);
       }
 
       @Override
@@ -171,7 +112,7 @@ abstract public class DataTable<T> extends JTable {
    abstract protected class NumericColumn extends DataTableColumn<T> {
 
       protected NumericColumn(String title) {
-         super(title);
+         super(table, title);
       }
 
       @Override

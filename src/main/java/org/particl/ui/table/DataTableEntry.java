@@ -1,7 +1,5 @@
 package org.particl.ui.table;
 
-import org.particl.ui.table.DataTable.DataTableColumn;
-
 public class DataTableEntry<T>
 {
    private final T row;

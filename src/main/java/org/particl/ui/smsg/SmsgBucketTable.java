@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 
 import org.particl.rpc.core.smsg.SmsgBucket;
 import org.particl.rpc.core.smsg.SmsgPoller;
-import org.particl.ui.table.DataTable;
+import org.particl.ui.table.*;
 
 public class SmsgBucketTable extends DataTable<SmsgBucket> implements SmsgPoller.ISmsgBucketHandler {
 

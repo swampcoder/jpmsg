@@ -6,8 +6,6 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.table.AbstractTableModel;
 
-import org.particl.ui.table.DataTable.DataTableColumn;
-
 public class DataTableModel<T> extends AbstractTableModel {
 
    private final List<DataTableColumn<T>> columns;

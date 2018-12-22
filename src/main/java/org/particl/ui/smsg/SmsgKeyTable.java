@@ -6,7 +6,7 @@ import javax.swing.table.TableCellRenderer;
 
 import org.particl.rpc.core.smsg.SmsgKey;
 import org.particl.rpc.core.smsg.SmsgPoller;
-import org.particl.ui.table.DataTable;
+import org.particl.ui.table.*;
 
 public class SmsgKeyTable extends DataTable<SmsgKey> implements SmsgPoller.ISmsgKeyHandler {
 
