@@ -7,7 +7,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.particl.rpc.core.IParticlCore.SMSG;
-import org.particl.rpc.core.IParticlCore.SmsgInboxMode;
 import org.particl.rpc.core.smsg.SmsgMessage;
 import org.particl.rpc.core.smsg.SmsgPoller;
 

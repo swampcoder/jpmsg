@@ -6,8 +6,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.particl.rpc.core.IParticlCore.SMSG;
-import org.particl.rpc.core.IParticlCore.SmsgInboxMode;
-import org.particl.rpc.core.IParticlCore.SmsgOutboxMode;
 
 public class SmsgPoller {
 
@@ -31,12 +29,18 @@ public class SmsgPoller {
       public void notifyViev(List<SmsgMessage> matches);
    }
    
+   public static interface ISmsgBucketHandler 
+   {
+      public void notifyBuckets(List<SmsgBucket> buckets);
+   }
+   
    private final SMSG smsg;
    
    private Timer smsglocalkeys = null;
    private Timer smsgoutbox= null;
    private Timer smsginbox = null;
    private Timer smsgview = null;
+   private Timer smsgstats = null;
    
    private String outboxFilter = null;
    private String inboxFilter = null;
@@ -48,6 +52,7 @@ public class SmsgPoller {
    private final List<ISmsgOutboxHandler> outboxHandlers = new ArrayList<ISmsgOutboxHandler>();
    private final List<ISmsgKeyHandler> keyHandlers = new ArrayList<ISmsgKeyHandler>();
    private final List<ISmsgViewHandler> viewHandlers = new ArrayList<ISmsgViewHandler>();
+   private final List<ISmsgBucketHandler> bucketHandlers = new ArrayList<ISmsgBucketHandler>();
    
    public SmsgPoller (SMSG smsg, boolean fixedTimeMode) {
       this.smsg = smsg;
@@ -117,6 +122,21 @@ public class SmsgPoller {
       }, frequencyMs);
    }
    
+   public synchronized void scheduleBuckets(long frequencyMs)
+   {
+      if(smsgstats != null) smsgstats.cancel();
+      smsgstats = new Timer("smsg poll buckets");
+      schedule(smsgstats, new TimerTask() {
+         @Override
+         public void run( ) {
+            if(bucketHandlers.size() > 0) 
+            {
+               pollBuckets();
+            }
+         }
+      }, frequencyMs);
+   }
+   
    public void addInboxHandler(ISmsgInboxHandler handler) 
    {
       synchronized(inboxHandlers)
@@ -148,6 +168,14 @@ public class SmsgPoller {
          viewHandlers.add(handler);
       }
    }
+   
+   public void addBucketHandler(ISmsgBucketHandler handler) 
+   {
+      synchronized(bucketHandlers)
+      {
+         bucketHandlers.add(handler);
+      }
+   }
 
    public void cancel() 
    {
@@ -155,6 +183,7 @@ public class SmsgPoller {
       if(smsgoutbox != null) smsgoutbox.cancel();
       if(smsglocalkeys != null) smsglocalkeys.cancel();
       if(smsgview != null) smsgview.cancel();
+      if(smsgstats != null) smsgstats.cancel();
    }
    
    private void pollLocalKeys() 
@@ -185,7 +214,7 @@ public class SmsgPoller {
    private void pollInbox() 
    {
       List<SmsgMessage> msgs = smsg.inbox(SmsgInboxMode.All, inboxFilter);
-      
+
       synchronized(inboxHandlers)
       {
          for(ISmsgInboxHandler h : inboxHandlers)
@@ -198,6 +227,17 @@ public class SmsgPoller {
    private void pollView() 
    {
      // List<SmsgMessage> msgs = smsg
+   }
+   
+   private void pollBuckets( ) {
+      List<SmsgBucket> buckets = smsg.bucketStats().getBuckets();
+      synchronized(bucketHandlers) 
+      {
+         for(ISmsgBucketHandler h : bucketHandlers) 
+         {
+            h.notifyBuckets(buckets);
+         }
+      }
    }
    
    private void schedule(Timer timer, TimerTask task, long frequencyMs) 

@@ -38,7 +38,7 @@ public class SmsgBucket {
       return false;
    }
 
-   public Long getBucketId() {
+   public long getBucketId() {
       return bucketId;
    }
 

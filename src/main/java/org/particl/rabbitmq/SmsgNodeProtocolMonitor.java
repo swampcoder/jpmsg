@@ -8,7 +8,6 @@ import java.util.TimerTask;
 
 import org.apache.commons.codec.binary.Base64;
 import org.particl.rpc.core.IParticlCore.SMSG;
-import org.particl.rpc.core.IParticlCore.SmsgInboxMode;
 import org.particl.rpc.core.smsg.SmsgMessage;
 
 import com.google.gson.Gson;

@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.particl.rpc.core.smsg.SmsgBucketStats;
+import org.particl.rpc.core.smsg.SmsgInboxMode;
 import org.particl.rpc.core.smsg.SmsgKey;
 import org.particl.rpc.core.smsg.SmsgMessage;
 import org.particl.rpc.core.smsg.SmsgMessageSendResult;
+import org.particl.rpc.core.smsg.SmsgOption;
+import org.particl.rpc.core.smsg.SmsgOutboxMode;
 import org.particl.rpc.core.smsg.SmsgSendFailException;
 import org.particl.rpc.mp.dto.Bid;
 import org.particl.rpc.mp.dto.CurrencyPrice;
@@ -38,23 +41,9 @@ public interface IParticlCore extends BitcoindRpcClient {
    
    public SMSG getSMSG();
    
-   public static enum SmsgOption {
-      Delete, SetRead, AsciiEncoding, HexEncoding;
-   }
 
-   public static enum SmsgInboxMode {
-      All, Unread, Clear;
-   }
    
-   public static enum SmsgOutboxMode
-   {
-	   All, Clear;
-   }
    
-   public static enum SmsgLocation
-   {
-	   Inbox, Outbox, Sending;
-   }
 
    /**
     * Interfacing defining particl smsg functionality

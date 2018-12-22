@@ -9,10 +9,7 @@ import java.util.Map;
 
 import org.particl.rpc.core.ParticlJSONRPCClient;
 import org.particl.rpc.core.IParticlCore.SMSG;
-import org.particl.rpc.core.IParticlCore.SmsgInboxMode;
-import org.particl.rpc.core.IParticlCore.SmsgLocation;
-import org.particl.rpc.core.IParticlCore.SmsgOption;
-import org.particl.rpc.core.IParticlCore.SmsgOutboxMode;
+
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 

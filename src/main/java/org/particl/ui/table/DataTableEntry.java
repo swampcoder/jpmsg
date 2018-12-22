@@ -1,11 +1,14 @@
 package org.particl.ui.table;
 
+import org.particl.ui.table.DataTable.DataTableColumn;
 
 public class DataTableEntry<T>
 {
    private final T row;
 
    private final Object cell;
+   
+   private DataTableColumn<T> column = null;
 
    DataTableEntry(T row, Object cell)
    {
@@ -23,9 +26,19 @@ public class DataTableEntry<T>
       return cell;
    }
    
+   public DataTableColumn<T> getColumn() 
+   {
+      return column;
+   }
+   
    @Override
    public String toString() 
    {
       return "row=" + row + "  cell=" + cell;
+   }
+   
+   void setColumn(DataTableColumn<T> column) 
+   {
+      this.column = column;
    }
 }

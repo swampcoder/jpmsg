@@ -1,5 +1,7 @@
 package org.particl.rpc.mp;
 
+import javax.swing.SwingUtilities;
+
 public class Utils {
 
    public static void notNull(Object... objects) {
@@ -20,6 +22,13 @@ public class Utils {
          throw new IllegalStateException("Assertion Failed: " + msg);
       }
    }
-   
-   private Utils() {}
+
+   public static void assertSwingThread() {
+      if (!SwingUtilities.isEventDispatchThread()) {
+         throw new IllegalStateException("Thread must be swing!");
+      }
+   }
+
+   private Utils() {
+   }
 }

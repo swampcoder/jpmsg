@@ -14,9 +14,11 @@ import java.util.Set;
 import org.particl.rpc.core.smsg.ParticlSMSG;
 import org.particl.rpc.core.smsg.SmsgBucket;
 import org.particl.rpc.core.smsg.SmsgBucketStats;
+import org.particl.rpc.core.smsg.SmsgInboxMode;
 import org.particl.rpc.core.smsg.SmsgKey;
 import org.particl.rpc.core.smsg.SmsgMessage;
 import org.particl.rpc.core.smsg.SmsgMessageSendResult;
+import org.particl.rpc.core.smsg.SmsgOutboxMode;
 import org.particl.rpc.core.smsg.SmsgSendFailException;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;

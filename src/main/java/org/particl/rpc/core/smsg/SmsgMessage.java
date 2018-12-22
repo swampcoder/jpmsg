@@ -2,7 +2,6 @@ package org.particl.rpc.core.smsg;
 
 import java.util.Comparator;
 
-import org.particl.rpc.core.IParticlCore.SmsgLocation;
 import org.particl.util.PartUtil;
 
 public class SmsgMessage {
@@ -41,7 +40,7 @@ public class SmsgMessage {
    private boolean msgRead = false;
    private long expiryTime = Long.MAX_VALUE;
    private int msgSize = 0;
-   private SmsgLocation msgLocation = null;
+   private SmsgLocation msgLocation = SmsgLocation.Unknown;
    private boolean msgPaid = false;
 
    public SmsgMessage(String msgId) {

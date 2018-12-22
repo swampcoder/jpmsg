@@ -2,37 +2,35 @@ package org.particl.rpc.core.smsg;
 
 abstract public class Key {
 
-   private String address= null;
-   private String publicKey= null;
+   private String address = null;
+   private String publicKey = null;
    private Boolean receive = null;
    private Boolean anon = null;
    private String label = "";
-   
-   protected Key() 
-   {
+
+   // TODO make this concrete and get rid of subclasses smsg/wallet
+   private boolean smsgEnabled = false;
+
+   protected Key() {
       super();
    }
-   
+
    @Override
-   public int hashCode() 
-   {
+   public int hashCode() {
       return publicKey.hashCode();
    }
-   
+
    @Override
-   public boolean equals(Object o)
-   {
-      if(o instanceof Key)
-      {
+   public boolean equals(Object o) {
+      if (o instanceof Key) {
          Key k = (Key) o;
          return k.getPublicKey().equals(getPublicKey());
       }
       return false;
    }
-   
+
    @Override
-   public String toString() 
-   {
+   public String toString() {
       return "Key address=" + address + " pubkey=" + publicKey;
    }
 
@@ -56,6 +54,14 @@ abstract public class Key {
       return label;
    }
 
+   public boolean isSmsgEnabled() {
+      return smsgEnabled;
+   }
+
+   void setSmsgEnabled(boolean smsgEnabled) {
+      this.smsgEnabled = smsgEnabled;
+   }
+
    void setAddress(String address) {
       this.address = address;
    }
@@ -75,8 +81,5 @@ abstract public class Key {
    void setLabel(String label) {
       this.label = label;
    }
-   
-   
-   
-   
+
 }
