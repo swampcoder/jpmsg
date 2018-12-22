@@ -59,6 +59,30 @@ public class SmsgPoller {
       this.fixedTimeMode = fixedTimeMode;
    }
    
+   public void executeInbox(String filter) 
+   {
+      List<SmsgMessage> msgs = smsg.inbox(SmsgInboxMode.All, filter);
+      synchronized(inboxHandlers)
+      {
+         for(ISmsgInboxHandler h : inboxHandlers)
+         {
+            h.notifyInbox(msgs);
+         }
+      }
+   }
+   
+   public void executeOutbox(String filter) 
+   {
+      List<SmsgMessage> msgs = smsg.outbox(SmsgOutboxMode.All, filter);
+      synchronized(outboxHandlers)
+      {
+         for(ISmsgOutboxHandler h : outboxHandlers)
+         {
+            h.notifyOutbox(msgs);
+         }
+      }
+   }
+   
    public synchronized void scheduleLocalKeys(long frequencyMs )
    {
       if(smsglocalkeys != null) smsglocalkeys.cancel();

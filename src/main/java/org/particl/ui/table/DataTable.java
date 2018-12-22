@@ -2,11 +2,14 @@ package org.particl.ui.table;
 
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
@@ -18,6 +21,8 @@ abstract public class DataTable<T> extends JTable {
    private DataTableModel<T> model = null;
    private TableRowSorter<DataTableModel<T>> sorter = null;
    private TableColumnAdjuster columnAdjuster = null;
+   private final List<IDataTableSelectionListener<T>> selectListeners = 
+         new ArrayList<IDataTableSelectionListener<T>>();
 
    public DataTable() {
       super();
@@ -33,21 +38,51 @@ abstract public class DataTable<T> extends JTable {
          initColumns(columns);
          model = new DataTableModel<T>(columns);
          setModel(model);
-        // sorter = new TableRowSorter<DataTableModel<T>>();
-        // setRowSorter(sorter);
+         // sorter = new TableRowSorter<DataTableModel<T>>();
+         // setRowSorter(sorter);
          for (int i = 0; i < columns.size(); i++) {
             TableColumn column = getColumnModel().getColumn(i);
             TableCellRenderer renderer = columns.get(i).getRenderer();
             column.setCellRenderer(renderer);
             Comparator<?> comparator = columns.get(i).getComparator();
-            //if (comparator != null)
-            //   sorter.setComparator(i, comparator);
+            // if (comparator != null)
+            // sorter.setComparator(i, comparator);
          }
-         addMouseListener(new TableMouseListener());
          columnAdjuster = new TableColumnAdjuster(this);
          model.addTableModelListener(columnAdjuster);
          addPropertyChangeListener(columnAdjuster);
+
+         getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+               handleSelection(e);
+            }
+         });
+         
+         addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+               if (e.getClickCount() == 2) {
+                  JTable target = (JTable)e.getSource();
+                  int row = target.getSelectedRow();
+                  T t = model.get(row);
+                  if(t != null) 
+                  {
+                     handleDoubleClick(t);
+                  }
+               }
+            }
+         });
       }
+   }
+
+   public void addSelectListener(IDataTableSelectionListener<T> listener)
+   {
+      selectListeners.add(listener);
+   }
+   
+   public void removeSelectListener(IDataTableSelectionListener<T> listener) 
+   {
+      selectListeners.remove(listener);
    }
 
    public void addOrUpdate(T t) {
@@ -74,14 +109,24 @@ abstract public class DataTable<T> extends JTable {
    public void applyFilters() {
       model.applyFilters();
    }
-   
-   public TableColumnAdjuster getColumnAdjuster()
-   {
+
+   public TableColumnAdjuster getColumnAdjuster() {
       return columnAdjuster;
    }
 
    protected void universalDecorate(DataTableEntry<T> entry, Component component, boolean selected) {
 
+   }
+   
+   protected void handleDoubleClick(T t) {}
+
+   protected void handleSelection(ListSelectionEvent lse) {
+      int[] selectedRow = table.getSelectedRows();
+      List<T> selections = new ArrayList<T>();
+      for (int i = 0; i < selectedRow.length; i++) {
+         T t = model.get(selectedRow[i]);
+         selections.add(t);
+      }
    }
 
    // Override where required
@@ -156,9 +201,4 @@ abstract public class DataTable<T> extends JTable {
       }
 
    }
-
-   protected class TableMouseListener extends MouseAdapter {
-
-   }
-
 }

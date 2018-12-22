@@ -49,6 +49,12 @@ public class SmsgMessageTable extends DataTable<SmsgMessage>
    {
       return filter;
    }
+   
+   @Override
+   protected void handleDoubleClick(SmsgMessage msg) 
+   {
+      System.out.println("Double: "+ msg);
+   }
 
    @Override
    protected void initColumns(List<DataTableColumn<SmsgMessage>> columns) {

@@ -22,6 +22,11 @@ public class DataTableModel<T> extends AbstractTableModel {
       this.activeList = unfilteredList;
    }
    
+   public T get(int rowIndex) 
+   {
+      return activeList.get(rowIndex);
+   }
+   
    public void addFilter(IDataTableFilter<T> filter) 
    {
       filters.add(filter);

@@ -11,7 +11,7 @@ import org.particl.ui.table.IDataTableFilter;
 public class SmsgMessageTableFilter implements IDataTableFilter<SmsgMessage> {
 
    private final SmsgMessageTable table;
-   private List<SmsgLocation> permittedLocations = new ArrayList<SmsgLocation>();
+   private List<SmsgLocation> msgLocations = new ArrayList<SmsgLocation>();
    private String from = null;
    
    private Long beginTimeFilter = null;
@@ -32,8 +32,8 @@ public class SmsgMessageTableFilter implements IDataTableFilter<SmsgMessage> {
    
    public synchronized void updateLocations(SmsgLocation...locations) 
    {
-      permittedLocations.clear();
-      permittedLocations.addAll(Arrays.asList(locations));
+      msgLocations.clear();
+      msgLocations.addAll(Arrays.asList(locations));
       table.applyFilters();
    }
    
@@ -66,7 +66,7 @@ public class SmsgMessageTableFilter implements IDataTableFilter<SmsgMessage> {
    @Override
    public synchronized boolean isVisible(SmsgMessage t) {
 
-      if(permittedLocations.size() > 0 && !permittedLocations.contains(t.getMsgLocation()))
+      if(msgLocations.size() > 0 && !msgLocations.contains(t.getMsgLocation()))
       {
          return false;
       }
