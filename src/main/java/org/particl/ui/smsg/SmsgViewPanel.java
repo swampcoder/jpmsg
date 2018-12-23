@@ -28,7 +28,7 @@ public class SmsgViewPanel extends JPanel {
       super();
       
       this.particl = particl;
-      this.poller = new SmsgPoller(particl.getSMSG(), false);
+      this.poller = new SmsgPoller(false);
       
       
       localKeyTable = new SmsgKeyTable();

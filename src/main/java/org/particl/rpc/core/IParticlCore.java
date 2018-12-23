@@ -41,7 +41,7 @@ public interface IParticlCore extends BitcoindRpcClient {
    
    public SMSG getSMSG();
    
-
+   public boolean manageaddressbook(AddressBookAction action, String address, String label, String purpose);
    
    
 

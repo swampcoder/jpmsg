@@ -58,8 +58,7 @@ public class ParticlSmsgNode extends SmsgNode {
       QueueThreads.execute(responseQueue);
       QueueThreads.execute(requestQueue);
 
-      smsgInboxMonitor = new SmsgNodeProtocolMonitor(
-            particl.getSMSG(), requestQueue, null);
+      smsgInboxMonitor = new SmsgNodeProtocolMonitor(requestQueue, null);
       
       return addr_pk;
    }

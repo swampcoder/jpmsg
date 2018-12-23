@@ -21,7 +21,7 @@ public class ParticlSmsgUserNode extends SmsgNode {
    public ParticlSmsgUserNode(ParticlJSONRPCClient particl) 
    {
       super(particl);
-      this.userNodeMonitor = new SmsgUserNodeProtocolMonitor(particl.getSMSG(), listeners);
+      this.userNodeMonitor = new SmsgUserNodeProtocolMonitor(listeners);
    }
    
    public ParticlJSONRPCClient getCoreRpc() 

@@ -22,6 +22,7 @@ import org.particl.rpc.core.smsg.SmsgOutboxMode;
 import org.particl.rpc.core.smsg.SmsgSendFailException;
 
 import wf.bitcoin.javabitcoindrpcclient.BitcoinJSONRPCClient;
+import wf.bitcoin.javabitcoindrpcclient.BitcoinRPCException;
 
 public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements IParticlCore {
 
@@ -29,9 +30,13 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements IParti
 
       try {
 
-         ParticlJSONRPCClient rpc = new ParticlJSONRPCClient("localhost", "particl", "password", 22223);
+         ParticlJSONRPCClient rpc = new ParticlJSONRPCClient("localhost", "particl", "password", 22222);
+         
+    
          System.out.println("balance: " + rpc.getBalance());
-
+         rpc.getSMSG().bucketDump();
+         rpc.manageaddressbook(AddressBookAction.Edit, "pYHfdW88871qvfSg4UHsSLPmx38Zh8LgCN", "testing2", null);
+         if(true) return;
          //rpc.getSMSG().enable("wallet.dat");
         // rpc.getSMSG().enable("dkd");
         // rpc.getSMSG().disable();
@@ -61,7 +66,7 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements IParti
          System.out.println(inbox);
          // rpc.getSMSG().scanchain();
          rpc.getSMSG().bucketStats();
-         rpc.getSMSG().bucketDump();
+
          List<SmsgKey> smsgKeys = rpc.getSMSG().smsgKeys();
          System.out.println(smsgKeys);
 
@@ -110,5 +115,26 @@ public class ParticlJSONRPCClient extends BitcoinJSONRPCClient implements IParti
 
       return smsg;
    }
-
+   
+   public List<String> getaddressesbylabel(String label) 
+   {
+      LinkedHashMap response = (LinkedHashMap) query("getaddressesbylabel", label);
+      
+      return null;
+   }
+   @Override
+   public boolean manageaddressbook(AddressBookAction action, String address, String label, String purpose) {
+      
+      try
+      {
+         @SuppressWarnings("rawtypes")
+         LinkedHashMap response = (LinkedHashMap) query("manageaddressbook", action.cmd_text(), address, label);
+         System.out.println(response);
+         String result = (String) response.get("result");
+         return result.equals("success");
+      } catch(BitcoinRPCException rpcEx)
+      {
+         return false;
+      }
+   }
 }

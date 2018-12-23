@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.particl.app.Application;
 import org.particl.rpc.core.IParticlCore.SMSG;
+import org.particl.rpc.mp.ParticlConnection;
 
 public class SmsgPoller {
 
@@ -33,9 +35,7 @@ public class SmsgPoller {
    {
       public void notifyBuckets(List<SmsgBucket> buckets);
    }
-   
-   private final SMSG smsg;
-   
+
    private Timer smsglocalkeys = null;
    private Timer smsgoutbox= null;
    private Timer smsginbox = null;
@@ -54,14 +54,13 @@ public class SmsgPoller {
    private final List<ISmsgViewHandler> viewHandlers = new ArrayList<ISmsgViewHandler>();
    private final List<ISmsgBucketHandler> bucketHandlers = new ArrayList<ISmsgBucketHandler>();
    
-   public SmsgPoller (SMSG smsg, boolean fixedTimeMode) {
-      this.smsg = smsg;
+   public SmsgPoller (boolean fixedTimeMode) {
       this.fixedTimeMode = fixedTimeMode;
    }
    
    public void executeInbox(String filter) 
    {
-      List<SmsgMessage> msgs = smsg.inbox(SmsgInboxMode.All, filter);
+      List<SmsgMessage> msgs = smsg().inbox(SmsgInboxMode.All, filter);
       synchronized(inboxHandlers)
       {
          for(ISmsgInboxHandler h : inboxHandlers)
@@ -73,7 +72,7 @@ public class SmsgPoller {
    
    public void executeOutbox(String filter) 
    {
-      List<SmsgMessage> msgs = smsg.outbox(SmsgOutboxMode.All, filter);
+      List<SmsgMessage> msgs = smsg().outbox(SmsgOutboxMode.All, filter);
       synchronized(outboxHandlers)
       {
          for(ISmsgOutboxHandler h : outboxHandlers)
@@ -212,7 +211,7 @@ public class SmsgPoller {
    
    private void pollLocalKeys() 
    {
-      List<SmsgKey> keys = smsg.smsgKeys();
+      List<SmsgKey> keys = smsg().smsgKeys();
       synchronized(keyHandlers)
       {
          for(ISmsgKeyHandler h : keyHandlers)
@@ -224,7 +223,7 @@ public class SmsgPoller {
    
    private void pollOutbox() 
    {
-      List<SmsgMessage> msgs = smsg.outbox(SmsgOutboxMode.All, outboxFilter);
+      List<SmsgMessage> msgs = smsg().outbox(SmsgOutboxMode.All, outboxFilter);
       
       synchronized(outboxHandlers)
       {
@@ -237,7 +236,7 @@ public class SmsgPoller {
    
    private void pollInbox() 
    {
-      List<SmsgMessage> msgs = smsg.inbox(SmsgInboxMode.All, inboxFilter);
+      List<SmsgMessage> msgs = smsg().inbox(SmsgInboxMode.All, inboxFilter);
 
       synchronized(inboxHandlers)
       {
@@ -254,7 +253,7 @@ public class SmsgPoller {
    }
    
    private void pollBuckets( ) {
-      List<SmsgBucket> buckets = smsg.bucketStats().getBuckets();
+      List<SmsgBucket> buckets = smsg().bucketStats().getBuckets();
       synchronized(bucketHandlers) 
       {
          for(ISmsgBucketHandler h : bucketHandlers) 
@@ -274,5 +273,10 @@ public class SmsgPoller {
       {
          timer.schedule(task, 0, frequencyMs);
       }
+   }
+   
+   private static SMSG smsg() 
+   {
+      return Application.getService(ParticlConnection.class).core().getSMSG();
    }
 }

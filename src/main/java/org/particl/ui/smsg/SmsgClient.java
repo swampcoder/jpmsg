@@ -4,11 +4,18 @@ import java.awt.BorderLayout;
 import java.net.MalformedURLException;
 import java.util.Properties;
 
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.jdesktop.swingx.JXMultiSplitPane;
+import org.jdesktop.swingx.JXPanel;
+import org.jdesktop.swingx.MultiSplitLayout;
+import org.particl.app.Application;
 import org.particl.rpc.core.ParticlJSONRPCClient;
 import org.particl.ui.desktop.AppFrame;
 import org.particl.ui.desktop.DesktopException;
@@ -18,17 +25,27 @@ import com.jtattoo.plaf.smart.SmartLookAndFeel;
 
 public class SmsgClient {
 
-
    private SmsgClientStatusBarPanel statusPanel;
    
    public SmsgClient(ParticlJSONRPCClient rpc) throws DesktopException 
    {
-      AppFrame frame = new AppFrame();
-      frame.addDesktop("SMSG");
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() 
+         {
+            try {
+               Application.frame().addDesktop("SMSG");
+            } catch (DesktopException e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            }
+            statusPanel = new SmsgClientStatusBarPanel(rpc);
+            Application.frame().setStatusBar(statusPanel);
+         }
+      });
       
-      statusPanel = new SmsgClientStatusBarPanel(rpc);
-      frame.setStatusBar(statusPanel);
    }
+  
    
    private static void initLAF() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException 
    {
@@ -63,7 +80,8 @@ public class SmsgClient {
       SmartLookAndFeel.setCurrentTheme(props);
       // select the Look and Feel
       //UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
-      UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
+      //UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
+      UIManager.setLookAndFeel("com.jtattoo.plaf.texture.TextureLookAndFeel");
 
    }
    

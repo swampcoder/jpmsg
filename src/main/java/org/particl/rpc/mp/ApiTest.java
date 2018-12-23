@@ -3,13 +3,28 @@ package org.particl.rpc.mp;
 import java.net.MalformedURLException;
 import java.util.UUID;
 
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 import org.particl.rpc.mp.market.MarketAddRequest;
+
+import voldemort.server.VoldemortConfig;
+import voldemort.server.VoldemortServer;
 
 public class ApiTest {
 
 
    public static void main(String[] args) 
    {
+
+      DB db = DBMaker
+            .fileDB("/home/mint/db.test")
+            //TODO encryption API
+            //.encryptionEnable("password")
+            .make();
+      
+      DBMaker.fileDB("").allocateStartSize(100*1024*1024).make();
+      
+      /*
       ParticlMarketApi api;
       try {
          api = new ParticlMarketApi("localhost", 3000, "test", "test", null);
@@ -24,7 +39,7 @@ public class ApiTest {
       } catch (MalformedURLException | MarketException e) {
          // TODO Auto-generated catch block
          e.printStackTrace();
-      }
+      }*/
      
    }
 }

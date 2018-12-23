@@ -263,6 +263,7 @@ public class ParticlSMSG implements SMSG {
          if (daysRetention != null) {
             msg.setDaysRetention(daysRetention.intValue());
          }
+        
          msg.setMsgLocation(LocationMap.get(map.get("location")));
          System.out.println(msg);
 

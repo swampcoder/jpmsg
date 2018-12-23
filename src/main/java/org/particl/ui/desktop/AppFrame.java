@@ -11,24 +11,35 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+
+import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 
 public class AppFrame implements IFrame {
 
    private JFrame frame = new JFrame();
    private final JPanel appPane = new JPanel();
-   private final JTabbedPane desktopTabs = new JTabbedPane();
+   private final JTabbedPane desktopTabs = new JhromeTabbedPane();
    private List<DesktopPanel> frameDesktops = new ArrayList<DesktopPanel>();
    private final Map<String, DesktopPanel> desktopMap = new HashMap<String, DesktopPanel>();
    
    public AppFrame() 
    {
       super();
-      appPane.setLayout(new BorderLayout());
-      appPane.add(desktopTabs, BorderLayout.CENTER);
-      frame.getContentPane().add(appPane);
-      appPane.setPreferredSize(new Dimension(800,700));
-      frame.pack();
-      frame.setVisible(true);
+      
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() 
+         {
+            appPane.setLayout(new BorderLayout());
+            appPane.add(desktopTabs, BorderLayout.CENTER);
+            frame.getContentPane().add(appPane);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            appPane.setPreferredSize(new Dimension(800,700));
+            frame.pack();
+            frame.setVisible(true);
+         }
+      });
    }
    
    public Iterator<DesktopPanel> getDesktops() 

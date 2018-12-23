@@ -15,8 +15,8 @@ public class SmsgUserNodeProtocolMonitor extends SmsgProtocolMonitor {
       public void handleSmsg(SmsgMessage msg);
    }
 
-   public SmsgUserNodeProtocolMonitor(SMSG smsg, List<IParticlUserNodeListener> listeners) {
-      super(smsg, listeners);
+   public SmsgUserNodeProtocolMonitor(List<IParticlUserNodeListener> listeners) {
+      super(listeners);
    }
 
    @Override

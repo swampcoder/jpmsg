@@ -6,14 +6,15 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.particl.app.Application;
 import org.particl.rpc.core.IParticlCore.SMSG;
 import org.particl.rpc.core.smsg.SmsgMessage;
 import org.particl.rpc.core.smsg.SmsgPoller;
+import org.particl.rpc.mp.ParticlConnection;
 
 abstract public class SmsgProtocolMonitor implements SmsgPoller.ISmsgInboxHandler {
 
    private final SmsgPoller poller;
-   private final SMSG smsg;
    private Set<String> activeMsgs = new HashSet<String>();
    private Set<String> expiredMsgs = new HashSet<String>();
    
@@ -21,12 +22,11 @@ abstract public class SmsgProtocolMonitor implements SmsgPoller.ISmsgInboxHandle
    
    abstract protected boolean processProtcolMsg(SmsgMessage smsg);
    
-   public SmsgProtocolMonitor(SMSG smsg, List<IParticlUserNodeListener> listeners) 
+   public SmsgProtocolMonitor(List<IParticlUserNodeListener> listeners) 
    {
       super();
-      this.smsg = smsg;
       this.listeners = listeners;
-      this.poller = new SmsgPoller(smsg, false);
+      this.poller = new SmsgPoller(false);
       this.poller.scheduleInbox(5000, null);
    }
    
@@ -48,7 +48,7 @@ abstract public class SmsgProtocolMonitor implements SmsgPoller.ISmsgInboxHandle
 
    protected SMSG getSMSG() 
    {
-      return smsg;
+      return Application.getService(ParticlConnection.class).core().getSMSG();
    }
 
    @Override
@@ -77,7 +77,7 @@ abstract public class SmsgProtocolMonitor implements SmsgPoller.ISmsgInboxHandle
             
             if(getClass() != SmsgUserNodeProtocolMonitor.class)
             {
-               smsg.purge(expiredId);
+               getSMSG().purge(expiredId);
                System.out.println("Purging id: " + expiredId);
             }
          }

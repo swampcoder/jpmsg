@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.particl.ui.mp.MarketplaceListingViewFactory;
 import org.particl.ui.smsg.SmsgBucketViewFactory;
 import org.particl.ui.smsg.SmsgInboxViewFactory;
 import org.particl.ui.smsg.SmsgLocalKeyViewFactory;
@@ -23,6 +24,7 @@ public class Factories {
       addFactory(new SmsgOutboxViewFactory());
       addFactory(new SmsgLocalKeyViewFactory());
       addFactory(new SmsgBucketViewFactory());
+      addFactory(new MarketplaceListingViewFactory());
    }
    
    public static Iterator<String> getViewGroups() 

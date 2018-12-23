@@ -30,6 +30,21 @@ public class Item {
       super();
    }
    
+   public String getSeller() 
+   {
+      return seller;
+   }
+   
+   public Market getMarket() 
+   {
+      return Market;
+   }
+   
+   public ItemInformation getItemInformation() 
+   {
+      return ItemInformation;
+   }
+   
    @Override
    public String toString() 
    {

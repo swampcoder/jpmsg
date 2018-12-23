@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -14,6 +15,11 @@ import javax.swing.event.ChangeListener;
 
 public class DesktopFrame extends JInternalFrame implements ChangeListener {
 
+   public static ImageIcon icon;
+   static 
+   {
+      icon = new ImageIcon(ClassLoader.getSystemResource("particl-logo.png"));
+   }
    private static Integer frameIds = 0;
    private final int frameid = frameid();
    private final List<DesktopView> frameViews = new ArrayList<DesktopView>();
@@ -33,6 +39,9 @@ public class DesktopFrame extends JInternalFrame implements ChangeListener {
       getContentPane().add(initialView);
       viewOptionMenu = new ViewOptionMenu(this);
       loadViewMenu(initialView);
+      frameViews.add(initialView);
+      setFrameIcon(icon);
+      setTitle(initialView.getTitle());
    }
    
    public DesktopFrame(Desktop desktop, DesktopFrameLayout frameLayout) throws DesktopViewException 
@@ -57,6 +66,8 @@ public class DesktopFrame extends JInternalFrame implements ChangeListener {
       {
          throw new DesktopViewException("frame loading failed! #=" + frameLayout.numViews());
       }
+      
+      
    }
    
    public Desktop getDesktop() 
@@ -82,11 +93,13 @@ public class DesktopFrame extends JInternalFrame implements ChangeListener {
             tabContent.addTab(frameView.getTitle(), frameView);
          }
          getContentPane().add(tabContent);
+         tabContent.addChangeListener(this);
          revalidate();
       }
       else
       {
          tabContent.addTab(view.getTitle(), view);
+         tabContent.setSelectedIndex(tabContent.getTabCount()-1);
       }
    }
    
@@ -129,6 +142,7 @@ public class DesktopFrame extends JInternalFrame implements ChangeListener {
       {
          DesktopView view = (DesktopView) tabContent.getComponentAt(tabContent.getSelectedIndex());
          loadViewMenu(view);
+         setTitle(view.getTitle());
       }
    }
    

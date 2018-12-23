@@ -1,5 +1,6 @@
 package org.particl.ui.desktop;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class Desktop extends JDesktopPane {
    static
    {
       try {
-         ParticlWallpaper = ImageIO.read( ClassLoader.getSystemResource( "PART_WALL_0002.jpg" ));
+         ParticlWallpaper = ImageIO.read( ClassLoader.getSystemResource( "particl-logo.png" ));
       } catch (IOException e) {
          throw new ExceptionInInitializerError(e);
       }
@@ -82,6 +83,11 @@ public class Desktop extends JDesktopPane {
    @Override
    protected void paintComponent(Graphics g) {
        super.paintComponent(g);
-       g.drawImage(ParticlWallpaper, 0, 0, null);
+       int w = ParticlWallpaper.getWidth();
+       int middleW = getWidth()/2;
+       int middleH = getWidth()/2;
+       g.setColor(Color.BLACK);
+       g.fillRect(0, 0, getWidth(), getHeight());
+       g.drawImage(ParticlWallpaper, middleW - w/2, middleH - w/2, null);
    }
 }

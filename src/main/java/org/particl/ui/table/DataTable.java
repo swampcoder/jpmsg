@@ -117,6 +117,11 @@ abstract public class DataTable<T> extends JTable {
    public void addOrUpdate(T t) {
       model.addOrUpdate(t);
    }
+   
+   public void addOrUpdate(List<T> ts)
+   {
+      model.addOrUpdate(ts);
+   }
 
    public void removeRow(T t, boolean removeAll) {
       model.removeRow(t, removeAll);

@@ -18,9 +18,9 @@ public class SmsgNodeProtocolMonitor extends SmsgProtocolMonitor {
 
    private final ChannelRequestQueue requestQueue;
   
-   public SmsgNodeProtocolMonitor(SMSG smsg, ChannelRequestQueue requestQueue, List<IParticlUserNodeListener> listeners) 
+   public SmsgNodeProtocolMonitor(ChannelRequestQueue requestQueue, List<IParticlUserNodeListener> listeners) 
    {
-      super(smsg, listeners);
+      super(listeners);
       this.requestQueue =requestQueue;
    }
    
