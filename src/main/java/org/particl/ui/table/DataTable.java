@@ -6,16 +6,36 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 abstract public class DataTable<T> extends JTable {
 
+   
+   private static List<DataTable<?>> tables = new CopyOnWriteArrayList<DataTable<?>>();
+   private static Timer adjustTimer = new Timer("Data Table static adjuster");
+   static
+   {
+      adjustTimer.schedule(new TimerTask() {
+         @Override
+         public void run() 
+         {
+            for(DataTable<?> table : tables) 
+            {
+               table.columnAdjuster.adjustColumns();
+            }
+         }
+      }, 5555, 5555);
+   }
    private final DataTable<T> table = this;
    private List<DataTableColumn<T>> columns = new ArrayList<DataTableColumn<T>>();
    private DataTableModel<T> model = null;
@@ -49,8 +69,8 @@ abstract public class DataTable<T> extends JTable {
             // sorter.setComparator(i, comparator);
          }
          columnAdjuster = new TableColumnAdjuster(this);
-         model.addTableModelListener(columnAdjuster);
-         addPropertyChangeListener(columnAdjuster);
+         //model.addTableModelListener(columnAdjuster);
+         //addPropertyChangeListener(columnAdjuster);
 
          getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -69,10 +89,19 @@ abstract public class DataTable<T> extends JTable {
                   {
                      handleDoubleClick(t);
                   }
+               } else if(e.getClickCount() == 1 && e.isPopupTrigger()) 
+               {
+                  handleRightClick(e);
                }
             }
          });
+         tables.add(this);
       }
+   }
+   
+   public void destroyTable() 
+   {
+      tables.remove(this);
    }
 
    public void addSelectListener(IDataTableSelectionListener<T> listener)
@@ -128,6 +157,11 @@ abstract public class DataTable<T> extends JTable {
          selections.add(t);
       }
    }
+   
+   protected void handleRightClick(MouseEvent e) 
+   {
+      
+   }
 
    // Override where required
    abstract protected class StringColumn extends DataTableColumn<T> {
@@ -150,6 +184,20 @@ abstract public class DataTable<T> extends JTable {
 
       protected EditableStringColumn(String title) {
          super(title);
+      }
+      
+      abstract protected void applyString(String value);
+      
+      @Override
+      protected void setCellData(T t, Object cellObj) {
+         String str  = (String) cellObj;
+         applyString(str);
+      }
+      
+      @Override
+      public TableCellEditor getEditor() 
+      {
+         return new StringEditor();
       }
 
    }

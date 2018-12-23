@@ -20,6 +20,9 @@ public class DesktopMenu extends DynamicMenu {
       
       addCreateDesktop();
       
+      addSaveLayout();
+      
+      addLoadLayout();
    }
    
    private void addCreateDesktop() 
@@ -35,4 +38,13 @@ public class DesktopMenu extends DynamicMenu {
       add(createDesktop);
    }
 
+   private void addSaveLayout() 
+   {
+      
+   }
+   
+   private void addLoadLayout() 
+   {
+      
+   }
 }

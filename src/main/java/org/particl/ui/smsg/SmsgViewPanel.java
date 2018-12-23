@@ -32,7 +32,7 @@ public class SmsgViewPanel extends JPanel {
       
       
       localKeyTable = new SmsgKeyTable();
-      inboxTable = new SmsgMessageTable(particl);
+      inboxTable = new InboxSmsgTable(particl);
       outboxTable = new SmsgMessageTable(particl);
       bucketTable = new SmsgBucketTable();
       

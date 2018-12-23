@@ -1,5 +1,6 @@
 package org.particl.ui.desktop;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,10 +16,13 @@ abstract public class DesktopView extends JPanel  {
    private List<JMenu> viewMenus = new ArrayList<JMenu>();
    private String title = null;
    
+   abstract protected void closeView();
+   
    public DesktopView(DesktopInputData input) 
    {
       super();
       this.input = input;
+      setLayout(new BorderLayout());
    }
    
    public IDesktopViewFactory getFactory() 
@@ -31,9 +35,9 @@ abstract public class DesktopView extends JPanel  {
       return title;
    }
    
-   public Iterator<JMenu> getMenus() 
+   public Iterable<JMenu> getMenus() 
    {
-      return viewMenus.iterator();
+      return viewMenus;
    }
    
    public DesktopFrame getFrame() 
@@ -44,5 +48,10 @@ abstract public class DesktopView extends JPanel  {
    void setFrame(DesktopFrame frame)
    {
       this.frame = frame;
+   }
+   
+   protected void setTitle(String title) 
+   {
+      this.title = title;
    }
 }

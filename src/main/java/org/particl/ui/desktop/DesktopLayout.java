@@ -27,9 +27,4 @@ public class DesktopLayout {
    {
       return frameLayouts.iterator();
    }
-   
-   public void addLayout(DesktopFrameLayout frameLayout) 
-   {
-      
-   }
 }

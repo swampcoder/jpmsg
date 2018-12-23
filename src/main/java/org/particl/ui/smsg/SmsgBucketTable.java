@@ -67,7 +67,6 @@ public class SmsgBucketTable extends DataTable<SmsgBucket> implements SmsgPoller
       @Override
       protected Object extractCellData(SmsgBucket t) {
 
-         System.out.println("Active get: "+  t.getActiveMessages());
          return t.getActiveMessages();
       }
 

@@ -24,6 +24,10 @@ public class SmsgMessageTable extends DataTable<SmsgMessage>
       filter = new SmsgMessageTableFilter(this);
       initialize();
    }
+   
+   public IParticlCore rpc() {
+      return rpc;
+   }
 
    @Override
    public void notifyOutbox(List<SmsgMessage> outbox) {
@@ -49,21 +53,20 @@ public class SmsgMessageTable extends DataTable<SmsgMessage>
    {
       return filter;
    }
-   
-   @Override
-   protected void handleDoubleClick(SmsgMessage msg) 
-   {
-      System.out.println("Double: "+ msg);
-   }
 
    @Override
    protected void initColumns(List<DataTableColumn<SmsgMessage>> columns) {
 
+      columns.add(new LocationColumn("Location"));
+      columns.add(new SizeColumn("Size Kb"));
       columns.add(new FromColumn("From"));
       columns.add(new ToColumn("To"));
-      columns.add(new MsgIdColumn("ID"));
+      columns.add(new MsgTimeColumn());
+      //columns.add(new MsgIdColumn("ID"));
       columns.add(new MsgColumn("Message"));
    }
+   
+   
 
    @Override
    public void universalDecorate(DataTableEntry<SmsgMessage> entry, Component component, boolean selected) {
@@ -149,7 +152,8 @@ public class SmsgMessageTable extends DataTable<SmsgMessage>
       @Override
       protected Object extractCellData(SmsgMessage t) {
 
-         return t.getMsgLocation().toString();
+         if(t.getMsgLocation() == null) return "";
+         else return t.getMsgLocation().toString();
       }
 
    }
@@ -182,6 +186,28 @@ public class SmsgMessageTable extends DataTable<SmsgMessage>
          return t.getDaysRetention();
       }
 
+   }
+   
+   protected class MsgTimeColumn extends StringColumn
+   {
+      protected MsgTimeColumn( ) {
+         super("Message Time");
+      }
+
+      @Override
+      protected Object extractCellData(SmsgMessage t) {
+
+         if(t.getMsgLocation() == SmsgLocation.Inbox) 
+         {
+            return t.getReceiveTime().toString();
+         }
+         else if(t.getMsgLocation() == SmsgLocation.Outbox)
+         {
+            return t.getSentTime().toString();
+         }
+         return null;
+      }
+      
    }
 
    protected class SentTimeColumn extends StringColumn {

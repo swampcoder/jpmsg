@@ -2,7 +2,14 @@ package org.particl.ui.desktop;
 
 public interface IDesktopViewFactory {
 
-   public DesktopView createView(DesktopInputData viewData);
+   public String getViewGroup();
    
-   public void getInput(DesktopInputData viewData);
+   public String getViewDescription();
+   
+   public DesktopView createView(DesktopInputData viewData) throws DesktopViewException;
+   
+   default public void getInput(DesktopInputData viewData)
+   {
+      // default impl gets no input 
+   }
 }
