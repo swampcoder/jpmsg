@@ -34,6 +34,17 @@ public class Desktop extends JDesktopPane {
       this.desktopName = desktopName;
    }
    
+   public Desktop(DesktopLayout layout) 
+   {
+      desktopName = layout.getLayoutName();
+      Iterator<DesktopFrameLayout> frameLayouts = layout.getLayouts();
+      while(frameLayouts.hasNext()) 
+      {
+         DesktopFrameLayout frameLayout = frameLayouts.next();
+         
+      }
+   }
+   
    public String getDesktopName() 
    {
       return desktopName;

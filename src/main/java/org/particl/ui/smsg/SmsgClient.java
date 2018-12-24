@@ -1,12 +1,14 @@
 package org.particl.ui.smsg;
 
 import java.awt.BorderLayout;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -18,8 +20,11 @@ import org.jdesktop.swingx.MultiSplitLayout;
 import org.particl.app.Application;
 import org.particl.rpc.core.ParticlJSONRPCClient;
 import org.particl.ui.desktop.AppFrame;
+import org.particl.ui.desktop.DesktopConfiguration;
 import org.particl.ui.desktop.DesktopException;
+import org.particl.ui.desktop.DesktopMenu;
 import org.particl.ui.desktop.DesktopPanel;
+import org.particl.ui.rpc.RpcParamMenu;
 
 import com.jtattoo.plaf.smart.SmartLookAndFeel;
 
@@ -36,14 +41,23 @@ public class SmsgClient {
             try {
                Application.frame().addDesktop("SMSG");
             } catch (DesktopException e) {
-               // TODO Auto-generated catch block
                e.printStackTrace();
             }
             statusPanel = new SmsgClientStatusBarPanel(rpc);
             Application.frame().setStatusBar(statusPanel);
+            setupMenubar(Application.frame().getJMenubar());
          }
       });
       
+   }
+   
+   private static void setupMenubar(JMenuBar menubar)
+   {
+      DesktopMenu desktopConfig = new DesktopMenu();
+      menubar.add(desktopConfig);
+      
+      RpcParamMenu rpcConfig = new RpcParamMenu();
+      menubar.add(rpcConfig);
    }
   
    
@@ -85,9 +99,11 @@ public class SmsgClient {
 
    }
    
-   public static void main(String[] args) throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, DesktopException 
+   public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException, DesktopException, IOException 
    {
       initLAF();
+      Application.initialize();
+      Application.initializeDb(null);
       ParticlJSONRPCClient rpc = new ParticlJSONRPCClient("localhost", "particl", "password", 22222);
       new SmsgClient(rpc);
    }

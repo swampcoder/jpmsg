@@ -6,6 +6,8 @@ import java.util.List;
 
 public class DesktopLayout {
 
+   private String layoutName = null;
+   
    private List<DesktopFrameLayout> frameLayouts = new ArrayList<DesktopFrameLayout>();
    
    public DesktopLayout() 
@@ -21,6 +23,11 @@ public class DesktopLayout {
          DesktopFrame frame = frames.next();
          frameLayouts.add(new DesktopFrameLayout(frame));
       }
+   }
+   
+   public String getLayoutName() 
+   {
+      return layoutName;
    }
    
    public Iterator<DesktopFrameLayout> getLayouts() 

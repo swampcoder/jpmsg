@@ -9,19 +9,21 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.sexydock.tabs.jhrome.JhromeTabbedPaneUI;
 
-public class AppFrame implements IFrame {
+public class AppFrame implements IFrame{
 
    private JFrame frame = new JFrame();
    private final JPanel appPane = new JPanel();
    private final JTabbedPane desktopTabs = new JhromeTabbedPane();
    private List<DesktopPanel> frameDesktops = new ArrayList<DesktopPanel>();
    private final Map<String, DesktopPanel> desktopMap = new HashMap<String, DesktopPanel>();
+   private final JMenuBar menubar = new JMenuBar();
    
    public AppFrame() 
    {
@@ -31,6 +33,7 @@ public class AppFrame implements IFrame {
          @Override
          public void run() 
          {
+            frame.setJMenuBar(menubar);
             appPane.setLayout(new BorderLayout());
             appPane.add(desktopTabs, BorderLayout.CENTER);
             frame.getContentPane().add(appPane);
@@ -40,6 +43,30 @@ public class AppFrame implements IFrame {
             frame.setVisible(true);
          }
       });
+   }
+   
+   public void loadLayout(DesktopLayout layout) 
+   {
+      Desktop desktop = new Desktop(layout);
+      DesktopPanel desktopPanel = new DesktopPanel(desktop);
+      desktopMap.put(layout.getLayoutName(), desktopPanel);
+      desktopTabs.addTab(layout.getLayoutName(), desktopPanel);
+   }
+   
+   public Desktop getSelectedDesktop() 
+   {
+      DesktopPanel desktopPanel = (DesktopPanel) desktopTabs.getComponentAt(desktopTabs.getSelectedIndex());
+      return desktopPanel.getDesktop();
+   }
+   
+   public JMenuBar getJMenubar() 
+   {
+      return menubar;
+   }
+   
+   public JFrame getJFrame() 
+   {
+      return frame;
    }
    
    public Iterator<DesktopPanel> getDesktops() 

@@ -15,18 +15,12 @@ import org.particl.ui.table.*;
 public class SmsgMessageTable extends DataTable<SmsgMessage>
       implements SmsgPoller.ISmsgInboxHandler, SmsgPoller.ISmsgOutboxHandler {
 
-   private final IParticlCore rpc;
    private final SmsgMessageTableFilter filter;
    private boolean useBase64Encoding = false;
 
-   public SmsgMessageTable(IParticlCore rpc) {
-      this.rpc = rpc;
+   public SmsgMessageTable() {
       filter = new SmsgMessageTableFilter(this);
       initialize();
-   }
-   
-   public IParticlCore rpc() {
-      return rpc;
    }
 
    @Override

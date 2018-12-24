@@ -24,5 +24,10 @@ public class DesktopPanel extends JPanel {
       desktopMenubar.add(viewOptionMenu);
    }
    
+   public Desktop getDesktop() 
+   {
+      return desktop;
+   }
+   
    
 }
