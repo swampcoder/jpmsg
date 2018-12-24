@@ -17,16 +17,16 @@ public class MapDbCache {
 
    private DB db = null;
 
-   private final List<IMapDbCacheListener> listeners = new ArrayList<IMapDbCacheListener>();
-   
    private final Map<String, HTreeMap<String, String>> htree_string = new HashMap<String, HTreeMap<String, String>>();
    private final Map<String, HTreeMap<String, Integer>> htree_int = new HashMap<String, HTreeMap<String, Integer>>();
 
-   public MapDbCache(File dbDir, long size) throws IOException {
+   public MapDbCache(File dbfile, long size) throws IOException {
       super();
 
+      if(dbfile.length() == 0L) dbfile.delete();
+      System.out.println("DB FILE: " + dbfile);
       //dbDir.createNewFile();
-      db = DBMaker.fileDB(dbDir).allocateStartSize(size)
+      db = DBMaker.fileDB(dbfile).allocateStartSize(size)
             // TODO encryption API
             // .encryptionEnable("password")
             .make();

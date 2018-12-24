@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.particl.mapdb.MapDbCache;
+import org.particl.mapdb.MapDbUtil;
 import org.particl.ui.desktop.AppFrame;
 
 public class Application {
@@ -60,7 +61,7 @@ public class Application {
    
    public static synchronized boolean initializeDb(IDbResolver resolver) throws IOException 
    {
-      File dbLocation = new File("/home/mint/mapdb_app.db"); //resolver.getDbLocation();
+      File dbLocation = MapDbUtil.getDefaultMapDb();
       if(dbLocation == null) 
       {
          return false;

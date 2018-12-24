@@ -27,9 +27,7 @@ public class ParticlConnection implements IAppService {
    static 
    {
       Application.initService(new ParticlConnection(), ParticlConnection.class);
-      
-      System.out.println("Particl static init");
-      
+
       HTreeMap<String, Integer> paramMapInt = Application.getdb().intmap(ConnectionDbMapName);
       HTreeMap<String, String> paramMapStr = Application.getdb().stringmap(ConnectionDbMapName);
 
