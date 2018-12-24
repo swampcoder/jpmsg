@@ -12,6 +12,14 @@ import org.particl.rpc.mp.dto.Market;
 
 public class MarketPoller implements IAppService {
 
+   static 
+   {
+      MarketPoller poller = new MarketPoller(false);
+      Application.initService(poller, MarketPoller.class);
+      
+      poller.scheduleMarketListings(5000L);
+   }
+   
    public static interface IMarketItemHandler
    {
       public void notifyMarketListings(List<Item> listings);

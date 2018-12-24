@@ -15,7 +15,7 @@ public class MapDbUtil {
          throw new ExceptionInInitializerError("java.io.tmpdir does not exist. value=" + TmpDir);
       }
       
-      TmpDirFile = new File(TmpDir + File.separator + "default.mapdb2");
+      TmpDirFile = new File(TmpDir + File.separator + "default.mapd4");
    }
 
    public static File getDefaultMapDb() throws IOException 

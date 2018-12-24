@@ -18,24 +18,22 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
 import com.thetransactioncompany.jsonrpc2.client.JSONRPC2Session;
 import com.thetransactioncompany.jsonrpc2.client.JSONRPC2SessionException;
 
-public class ItemServiceImpl implements IItemService {
+public class ItemServiceImpl extends MarketBaseRpcService implements IItemService {
    
    private final static Type ItemListType = new TypeToken<ArrayList<Item>>() {}.getType();
 
-   private final JSONRPC2Session session;
-
    ItemServiceImpl(JSONRPC2Session session) {
-      this.session = session;
+      super(session);
    }
 
    @Override
    public List<Item> search(ItemSearchRequest request) {
       
-      JSONRPC2Request jsonRequest = new JSONRPC2Request("item", Arrays.asList("search", "*", 9999), 1);
+      JSONRPC2Request jsonRequest = new JSONRPC2Request("item", Arrays.asList("search", "*", 9999), createId());
       System.out.println("r1: " + jsonRequest);
       JSONRPC2Response response;
       try {
-         response = session.send(jsonRequest);
+         response = makeRequest(jsonRequest);
          System.out.println("response: " + response);
          Gson gson = new GsonBuilder().setPrettyPrinting().create();
          List<Item> itemList = gson.fromJson(response.getResult().toString(), ItemListType);
@@ -56,7 +54,7 @@ public class ItemServiceImpl implements IItemService {
       JSONRPC2Request jsonRequest = new JSONRPC2Request("item", Arrays.asList("get", 38), 1);
       JSONRPC2Response response;
       try {
-         response = session.send(jsonRequest);
+         response = makeRequest(jsonRequest);
          Gson gson = new GsonBuilder().setPrettyPrinting().create();
          Item item = gson.fromJson(response.getResult().toString(), Item.class);
          System.out.println("Item: " + item);
@@ -72,7 +70,7 @@ public class ItemServiceImpl implements IItemService {
       JSONRPC2Request jsonRequest = new JSONRPC2Request("item", Arrays.asList("get", 38), 1);
       JSONRPC2Response response;
       try {
-         response = session.send(jsonRequest);
+         response = makeRequest(jsonRequest);
          Gson gson = new GsonBuilder().setPrettyPrinting().create();
          Item item = gson.fromJson(response.getResult().toString(), Item.class);
          System.out.println("Item: " + item);

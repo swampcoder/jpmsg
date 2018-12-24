@@ -32,10 +32,13 @@ import wf.bitcoin.krotjson.Base64Coder;
 public class ParticlMarketApi implements IParticlMarket {
 
    private final URL serverUrl;
-   private JSONRPC2Session jsonSession;
+   private JSONRPC2Session rpcSession;
    
    private IMarketService marketService;
    private IItemService itemService;
+   private IPriceService priceService;
+   private IPaymentService paymentService;
+   private IInformationService infoService;
    
    private static class BasicAuthenticator implements ConnectionConfigurator {
       private final URL serverUrl;
@@ -54,13 +57,16 @@ public class ParticlMarketApi implements IParticlMarket {
    {
       super();
       serverUrl = new URL("http://" + user + ':' + password + "@" + host + ":" + Integer.toString(port) + "/api/rpc");
-      jsonSession = new JSONRPC2Session(serverUrl);
-      jsonSession.getOptions().setRequestContentType("application/json");
-      jsonSession.setConnectionConfigurator(new BasicAuthenticator(serverUrl));
+      rpcSession = new JSONRPC2Session(serverUrl);
+      rpcSession.getOptions().setRequestContentType("application/json");
+      rpcSession.setConnectionConfigurator(new BasicAuthenticator(serverUrl));
       
       // instantiate services 
-      marketService = new MarketServiceImpl(jsonSession);
-      itemService = new ItemServiceImpl(jsonSession);
+      marketService = new MarketServiceImpl(rpcSession);
+      itemService = new ItemServiceImpl(rpcSession);
+      priceService = new PriceServiceImpl(rpcSession);
+      paymentService = new PaymentServiceImpl(rpcSession);
+      infoService = new InformationServiceImpl(rpcSession);
    }
    
    @Override
@@ -143,14 +149,14 @@ public class ParticlMarketApi implements IParticlMarket {
 
    @Override
    public IPaymentService getPaymentService() {
-      // TODO Auto-generated method stub
-      return null;
+
+      return paymentService;
    }
 
    @Override
    public IPriceService getPriceService() {
-      // TODO Auto-generated method stub
-      return null;
+
+      return priceService;
    }
 
    @Override

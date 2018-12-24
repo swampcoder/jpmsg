@@ -11,6 +11,7 @@ import org.particl.ui.smsg.SmsgBucketViewFactory;
 import org.particl.ui.smsg.SmsgInboxViewFactory;
 import org.particl.ui.smsg.SmsgLocalKeyViewFactory;
 import org.particl.ui.smsg.SmsgOutboxViewFactory;
+import org.particl.ui.smsg.chatter.SingleUserChatterFactory;
 
 // refactor this later
 public class Factories {
@@ -25,6 +26,7 @@ public class Factories {
       addFactory(new SmsgLocalKeyViewFactory());
       addFactory(new SmsgBucketViewFactory());
       addFactory(new MarketplaceListingViewFactory());
+      addFactory(new SingleUserChatterFactory());
    }
    
    public static Iterator<String> getViewGroups() 

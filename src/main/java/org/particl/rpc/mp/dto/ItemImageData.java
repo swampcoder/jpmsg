@@ -1,5 +1,8 @@
 package org.particl.rpc.mp.dto;
 
+import java.awt.image.BufferedImage;
+import java.lang.ref.SoftReference;
+
 import javax.swing.JFrame;
 
 public class ItemImageData {
@@ -14,15 +17,36 @@ public class ItemImageData {
    private Long createdAt = null;
    private String originalMime = null;
    private String originalName = null;
-   
+
    public ItemImageData() 
    {
       super();
-      
-      JFrame f = new JFrame();
-      f.setExtendedState(JFrame.MAXIMIZED_BOTH);
+   }
+   
+   @Override
+   public String toString() 
+   {
+      return "ItemImageData id=" + id + " proto=" + protocol + "  encoding=" + encoding + " version=" + imageVersion + " dataid=" + dataId + " " + 
+            "  itemImgId=" + itemImageId + " origMime=" + originalMime + "  origName=" + originalName;
    }
 
+   @Override
+   public int hashCode() 
+   {
+      return dataId.hashCode();
+   }
+   
+   @Override
+   public boolean equals(Object cmp) 
+   {
+      if(cmp instanceof ItemImageData) 
+      {
+         ItemImageData iid = (ItemImageData) cmp;
+         return iid.getDataId().equals(dataId);
+      }
+      return false;
+   }
+   
    public Integer getId() {
       return id;
    }
@@ -102,6 +126,6 @@ public class ItemImageData {
    void setOriginalName(String originalName) {
       this.originalName = originalName;
    }
-   
+
    
 }

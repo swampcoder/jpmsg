@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.mapdb.DBException;
 import org.particl.mapdb.MapDbCache;
 import org.particl.mapdb.MapDbUtil;
 import org.particl.ui.desktop.AppFrame;
@@ -59,9 +60,10 @@ public class Application {
       }
    }
    
-   public static synchronized boolean initializeDb(IDbResolver resolver) throws IOException 
+   public static synchronized boolean initializeDb(IDbResolver resolver) throws IOException, DBException
    {
       File dbLocation = MapDbUtil.getDefaultMapDb();
+      dbLocation.delete();
       if(dbLocation == null) 
       {
          return false;

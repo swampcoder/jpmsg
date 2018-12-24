@@ -45,6 +45,36 @@ public class Item {
       return ItemInformation;
    }
    
+   public PaymentInformation getPaymentInformation() 
+   {
+      return PaymentInformation;
+   }
+   
+   public FlaggedItem getFlagged() 
+   {
+      return FlaggedItem;
+   }
+   
+   public Long getPostedAt() 
+   {
+      return postedAt;
+   }
+   
+   public Long getExpiredAt() 
+   {
+      return expiredAt;
+   }
+   
+   public Long getUpdatedAt() 
+   {
+      return updatedAt;
+   }
+   
+   public Long getCreatedAt() 
+   {
+      return createdAt;
+   }
+   
    @Override
    public String toString() 
    {
@@ -65,6 +95,23 @@ public class Item {
       
       return itemStr;
               
+   }
+   
+   @Override
+   public int hashCode() 
+   {
+      return hash.hashCode();
+   }
+   
+   @Override
+   public boolean equals(Object obj) 
+   {
+      if(obj instanceof Item) 
+      {
+         Item item = (Item) obj;
+         return item.hash.equals(hash);
+      }
+      return false;
    }
    
 

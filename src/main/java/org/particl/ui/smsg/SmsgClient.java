@@ -1,32 +1,19 @@
 package org.particl.ui.smsg;
 
-import java.awt.BorderLayout;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Properties;
 
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.jdesktop.swingx.JXMultiSplitPane;
-import org.jdesktop.swingx.JXPanel;
-import org.jdesktop.swingx.MultiSplitLayout;
 import org.particl.app.Application;
 import org.particl.rpc.core.ParticlJSONRPCClient;
-import org.particl.ui.desktop.AppFrame;
-import org.particl.ui.desktop.DesktopConfiguration;
 import org.particl.ui.desktop.DesktopException;
 import org.particl.ui.desktop.DesktopMenu;
-import org.particl.ui.desktop.DesktopPanel;
+import org.particl.ui.mp.PriceTickerTitleBarPanel;
 import org.particl.ui.rpc.RpcParamMenu;
-
-import com.jtattoo.plaf.smart.SmartLookAndFeel;
 
 public class SmsgClient {
 
@@ -46,6 +33,8 @@ public class SmsgClient {
             statusPanel = new SmsgClientStatusBarPanel(rpc);
             Application.frame().setStatusBar(statusPanel);
             setupMenubar(Application.frame().getJMenubar());
+            Application.frame().getJFrame().setTitle("Particl Dev Tool v0.01");
+            new PriceTickerTitleBarPanel();
          }
       });
       
@@ -91,7 +80,7 @@ public class SmsgClient {
       props.put("windowBorderColor", "218 254 230");
       
       // set your theme
-      SmartLookAndFeel.setCurrentTheme(props);
+      //SmartLookAndFeel.setCurrentTheme(props);
       // select the Look and Feel
       //UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
       //UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");

@@ -31,7 +31,7 @@ public class ParticlConnection implements IAppService {
       HTreeMap<String, Integer> paramMapInt = Application.getdb().intmap(ConnectionDbMapName);
       HTreeMap<String, String> paramMapStr = Application.getdb().stringmap(ConnectionDbMapName);
 
-      paramMapStr.putIfAbsent("corehost", corehost);
+     /* paramMapStr.putIfAbsent("corehost", corehost);
       paramMapStr.putIfAbsent("coreuser", coreuser);
       paramMapStr.putIfAbsent("corepassword",  corepassword);
       paramMapInt.putIfAbsent("coreport", coreport);
@@ -39,7 +39,7 @@ public class ParticlConnection implements IAppService {
       paramMapStr.putIfAbsent("mphost", mphost);
       paramMapStr.putIfAbsent("mpuser", mpuser);
       paramMapStr.putIfAbsent("mppassword",  mppassword);
-      paramMapInt.putIfAbsent("mpport", mpport);
+      paramMapInt.putIfAbsent("mpport", mpport);*/
    }
    
    public static void init( ) {}
@@ -96,8 +96,9 @@ public class ParticlConnection implements IAppService {
                HTreeMap<String, Integer> paramMapInt = Application.getdb().intmap(ConnectionDbMapName);
                HTreeMap<String, String> paramMapStr = Application.getdb().stringmap(ConnectionDbMapName);
                
-               mp = new ParticlMarketApi(paramMapStr.get("mphost"), paramMapInt.get("mpport"), 
-                     paramMapStr.get("mpuser"), paramMapStr.get("mppassword"), null);
+               /*mp = new ParticlMarketApi(paramMapStr.get("mphost"), paramMapInt.get("mpport"), 
+                     paramMapStr.get("mpuser"), paramMapStr.get("mppassword"), null);*/
+               mp = new ParticlMarketApi("localhost", 3000, "test", "test", null); 
             } catch (MalformedURLException e) {
                throw new IllegalStateException("malformed url bug");
             }

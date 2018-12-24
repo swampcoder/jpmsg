@@ -23,11 +23,13 @@ public class ItemInformation {
    {
       super();
    }
-
+   
    @Override
    public String toString() 
    {
-      return getClass().getSimpleName() + "  id=" + id + "  listingItemId=" + listingItemId + " createdAt=" + createdAt + "  short desc: " + shortDescription;
+      return getClass().getSimpleName() + "  id=" + id + "  listingItemId=" + listingItemId + 
+            " createdAt=" + createdAt + "  short desc: " + shortDescription + "\n" + 
+            ItemImages;
    }
    
    public Integer getId() {

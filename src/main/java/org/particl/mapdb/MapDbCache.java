@@ -17,6 +17,7 @@ public class MapDbCache {
 
    private DB db = null;
 
+   private final Map<String, HTreeMap<String, Long>> htree_long = new HashMap<String, HTreeMap<String, Long>>();
    private final Map<String, HTreeMap<String, String>> htree_string = new HashMap<String, HTreeMap<String, String>>();
    private final Map<String, HTreeMap<String, Integer>> htree_int = new HashMap<String, HTreeMap<String, Integer>>();
 
@@ -26,14 +27,22 @@ public class MapDbCache {
       if(dbfile.length() == 0L) dbfile.delete();
       System.out.println("DB FILE: " + dbfile);
       //dbDir.createNewFile();
-      db = DBMaker.fileDB(dbfile).allocateStartSize(size)
+      db = DBMaker.fileDB(dbfile).allocateStartSize(size).make();
             // TODO encryption API
-            // .encryptionEnable("password")
-            .make();
+            // .encryptionEnable("password"
    }
 
    public DB db() {
       return db;
+   }
+   
+   public synchronized HTreeMap<String, Long> longmap(String name) {
+      HTreeMap<String, Long> long_map = htree_long.get(name);
+      if (long_map == null) {
+         long_map = db.hashMap(name).keySerializer(Serializer.STRING).valueSerializer(Serializer.LONG).createOrOpen();
+         htree_long.put(name, long_map);
+      }
+      return long_map;
    }
 
    public synchronized HTreeMap<String, String> stringmap(String name) {

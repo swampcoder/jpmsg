@@ -17,25 +17,22 @@ import com.thetransactioncompany.jsonrpc2.JSONRPC2Response;
 import com.thetransactioncompany.jsonrpc2.client.JSONRPC2Session;
 import com.thetransactioncompany.jsonrpc2.client.JSONRPC2SessionException;
 
-public class MarketServiceImpl implements IMarketService {
+public class MarketServiceImpl extends MarketBaseRpcService implements IMarketService {
 
-   private final static Type MarketListType = new TypeToken<ArrayList<Market>>() {
-   }.getType();
-
-   private final JSONRPC2Session session;
+   private final static Type MarketListType = new TypeToken<ArrayList<Market>>() {}.getType();
 
    MarketServiceImpl(JSONRPC2Session session) {
-      this.session = session;
+      super(session);
    }
 
    @Override
    public List<Market> list() {
 
-      JSONRPC2Request request = new JSONRPC2Request("market", Arrays.asList("list"), 1);
+      JSONRPC2Request request = new JSONRPC2Request("market", Arrays.asList("list"), createId());
       System.out.println("r1: " + request);
       JSONRPC2Response response;
       try {
-         response = session.send(request);
+         response = makeRequest(request);
          Gson gson = new GsonBuilder().setPrettyPrinting().create();
          List<Market> marketList = gson.fromJson(response.getResult().toString(), MarketListType);
          return marketList;
@@ -49,11 +46,11 @@ public class MarketServiceImpl implements IMarketService {
    public void add(String name, String privateKey, String address) throws MarketException {
 
       Utils.notNull(name, privateKey, address);
-      JSONRPC2Request jsonRequest = new JSONRPC2Request("market", Arrays.asList("add", name, privateKey, address), 5);
+      JSONRPC2Request jsonRequest = new JSONRPC2Request("market", Arrays.asList("add", name, privateKey, address), createId());
       System.out.println("request: " + jsonRequest);
       JSONRPC2Response response;
       try {
-         response = session.send(jsonRequest);
+         response = makeRequest(jsonRequest);
          System.out.println(response);
       } catch (JSONRPC2SessionException e) {
          

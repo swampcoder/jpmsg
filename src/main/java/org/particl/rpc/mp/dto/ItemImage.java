@@ -10,10 +10,34 @@ public class ItemImage {
    private Integer itemInformationId = null;
    private Long updatedAt = null;
    private Long createdAt = null;
-   private List<ItemImageData> itemImageData = new ArrayList<ItemImageData>();
+   private List<ItemImageData> ItemImageDatas = new ArrayList<ItemImageData>();
 
    public ItemImage() {
       super();
+   }
+   
+   @Override
+   public String toString() 
+   {
+      return "ItemImage hash=" + hash + " itemInformationId=" + itemInformationId + "  \n" + 
+            ItemImageDatas;
+   }
+   
+   @Override
+   public int hashCode() 
+   {
+      return hash.hashCode();
+   }
+   
+   @Override
+   public boolean equals(Object cmp) 
+   {
+      if(cmp instanceof ItemImage) 
+      {
+         ItemImage img = (ItemImage) cmp;
+         return img.hash.equals(hash);
+      }
+      return false;
    }
 
    public Integer getId() {
@@ -37,7 +61,7 @@ public class ItemImage {
    }
 
    public List<ItemImageData> getItemImageData() {
-      return itemImageData;
+      return ItemImageDatas;
    }
 
    void setId(Integer id) {
@@ -61,6 +85,6 @@ public class ItemImage {
    }
 
    void addItemImageData(ItemImageData imageData) {
-      this.itemImageData.add(imageData);
+      this.ItemImageDatas.add(imageData);
    }
 }
